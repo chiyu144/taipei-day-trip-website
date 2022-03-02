@@ -18,9 +18,11 @@ def attractions_columns(attractions):
       elif key == "RowNumber":
         renamed_key = "row_num"
       elif key == "CAT1":
-        renamed_key = "cat_one"
+        renamed_key = "tag"
       elif key == "CAT2":
-        renamed_key = "cat_two"
+        renamed_key = "category"
+      elif key == "xbody":
+        renamed_key = "description"
       elif key == "_id":
         renamed_key = "id"
       elif key == "avEnd":
