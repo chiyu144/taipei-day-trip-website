@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import current_app
+from flask import current_app, abort
 from mysql.connector import Error
 
 def with_cnx(need_commit = None):
@@ -13,7 +13,9 @@ def with_cnx(need_commit = None):
         if need_commit:
           cnx.commit()
       except Error as e:
-        print('MySql Connection Pool error: ', e)
+        abort(500, description=f"Exception raise in utils/with_cnx: {e}")
+      except Exception:
+        abort(500, description=current_app.abort_msg(Exception))
       finally:
         cursor.close()
         cnx.close()
