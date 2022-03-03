@@ -113,6 +113,7 @@ ENV/
 env.bak/
 venv.bak/
 config.ini
+tpe_daytrip.sql
 
 # Spyder project settings
 .spyderproject
