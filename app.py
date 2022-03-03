@@ -127,4 +127,4 @@ def api_attraction_id(attraction_id):
       abort(500, description=abort_msg(e))
 
 if __name__ == "__main__":
-  app.run(port=3000, debug=True)
+  app.run(port=3000, debug=True if app.config['ENV'] == "development" else False)
