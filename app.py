@@ -70,8 +70,7 @@ def not_found_error(e):
 
 # API 旅遊景點 → 取得景點資料列表
 @with_cnx(need_commit = False)
-def query_attractions(cursor, cols, page, keyword):
-  page_unit = 12
+def query_attractions(cursor, page_unit, cols, page, keyword):
   start_index = 0 if page == 0 else page * page_unit
   keyword_sql = f"where name like '%{keyword}%'" if keyword else ""
   query_sql = f"select {', '.join(map(lambda col: 'attractions.' + col, cols[0:-1]))}, group_concat(attractions_imgs.img_url) as {cols[-1]} " + \
@@ -86,17 +85,18 @@ def query_attractions(cursor, cols, page, keyword):
 @app.route("/api/attractions", methods=["GET"])
 def api_attractions():
   try:
+    page_unit = 12
     page = request.args.get('page', type=int)
     keyword = request.args.get('keyword')
     if page is None:
       abort(400, description="Parameter page <'int'> is required.")
     else:
       cols = ["id", "name", "category", "description", "address", "transport", "mrt", "latitude", "longitude", "images"]
-      values = query_attractions(cols, page, keyword)
+      values = query_attractions(page_unit, cols, page, keyword)
       result = [dict(zip(cols, value)) for value in values]
       for index, row in enumerate(result):
         result[index]["images"] = row["images"].split(",")
-      next_page = None if len(result) < 12 else page + 1
+      next_page = None if len(result) < page_unit else page + 1
       return jsonify({"nextPage": next_page, "data": result})
   except Exception as e:
     abort(500, description=abort_msg(e))
