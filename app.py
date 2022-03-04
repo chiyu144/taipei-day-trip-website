@@ -70,15 +70,23 @@ def not_found_error(e):
 
 # API 旅遊景點 → 取得景點資料列表
 @with_cnx(need_commit = False)
-def query_attractions(cursor, page_unit, cols, page, keyword):
+def query_attractions(cursor, page_unit, page, keyword):
   start_index = 0 if page == 0 else page * page_unit
-  keyword_sql = f"where name like '%{keyword}%'" if keyword else ""
-  query_sql = f"select {', '.join(map(lambda col: 'attractions.' + col, cols[0:-1]))}, group_concat(attractions_imgs.img_url) as {cols[-1]} " + \
-              f"from attractions_imgs " + \
-              f"inner join attractions on attractions.id = attractions_imgs.attraction_id {keyword_sql} " + \
-              f"group by attraction_id " + \
-              f"limit {start_index}, {page_unit};"
-  cursor.execute(query_sql)
+  if keyword:
+    cursor.execute("""
+      select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
+      attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
+      from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
+      where name like %s
+      group by attraction_id limit %s, %s
+      """, ("%"+keyword+"%", start_index, page_unit))
+  else:
+    cursor.execute("""
+      select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
+      attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
+      from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
+      group by attraction_id limit %s, %s
+      """, (start_index, page_unit))
   attractions = cursor.fetchall()
   return attractions
 
@@ -92,7 +100,7 @@ def api_attractions():
       abort(400, description="Parameter page <'int'> is required.")
     else:
       cols = ["id", "name", "category", "description", "address", "transport", "mrt", "latitude", "longitude", "images"]
-      values = query_attractions(page_unit, cols, page, keyword)
+      values = query_attractions(page_unit, page, keyword)
       result = [dict(zip(cols, value)) for value in values]
       for index, row in enumerate(result):
         result[index]["images"] = row["images"].split(",")
@@ -103,20 +111,23 @@ def api_attractions():
 
 # API 旅遊景點 → 根據景點編號取得景點資料
 @with_cnx(need_commit = False)
-def query_attraction_id(cursor, cols, attraction_id):
-  query_sql = f"select {', '.join(map(lambda col: 'attractions.' + col, cols[0:-1]))}, group_concat(attractions_imgs.img_url) as {cols[-1]} " + \
-              f"from attractions_imgs " + \
-              f"inner join attractions on attractions.id = attractions_imgs.attraction_id where attraction_id = {attraction_id} " + \
-              f"group by attraction_id "
-  cursor.execute(query_sql)
-  attraction_id = cursor.fetchone()
-  return attraction_id
+def query_attraction_id(cursor, attraction_id):
+  query_sql = """
+    select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
+    attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
+    from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
+    where attraction_id = %s
+    group by attraction_id
+    """
+  cursor.execute(query_sql, (attraction_id, ))
+  attraction = cursor.fetchone()
+  return attraction
 
 @app.route("/api/attraction/<int:attraction_id>", methods=["GET"])
 def api_attraction_id(attraction_id):
   try:
     cols = ["id", "name", "category", "description", "address", "transport", "mrt", "latitude", "longitude", "images"]
-    value = query_attraction_id(cols, attraction_id)
+    value = query_attraction_id(attraction_id)
     result = dict(zip(cols, value))
     result["images"] = result["images"].split(",")
     return jsonify({"data": result})
