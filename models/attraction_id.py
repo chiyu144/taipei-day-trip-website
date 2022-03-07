@@ -8,26 +8,26 @@ bp_m_attraction_id = Blueprint('m_attraction_id', __name__)
 
 @with_cnx(need_commit = False)
 def query_attraction_id(cursor, attraction_id):
-  query_sql = """
+  query_sql = '''
     SELECT attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
     attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) AS images 
     FROM attractions_imgs INNER JOIN attractions ON attractions.id = attractions_imgs.attraction_id 
     WHERE attraction_id = %s
     GROUP BY attraction_id
-    """
+    '''
   cursor.execute(query_sql, (attraction_id, ))
-  cols = [col[0] for col in cursor.description]
-  attraction = [dict(zip(cols, row)) for row in cursor.fetchone()]
+  columns = [col[0] for col in cursor.description]
+  attraction = [dict(zip(columns, row)) for row in cursor.fetchone()]
   return attraction
 
-@bp_m_attraction_id.route("/attraction/<int:attraction_id>", methods=["GET"])
+@bp_m_attraction_id.route('/attraction/<int:attraction_id>', methods=['GET'])
 def api_attraction_id(attraction_id):
   try:
     result = query_attraction_id(attraction_id)
-    result["images"] = result["images"].split(",")
-    return jsonify({"data": result})
+    result['images'] = result['images'].split(',')
+    return jsonify({'data': result})
   except Exception as e:
     if result is None:
-      abort(400, description="Parameter attraction id is incorrect.")
+      abort(400, description='Parameter attraction id is incorrect.')
     else:
       abort(500, description=abort_msg(e))

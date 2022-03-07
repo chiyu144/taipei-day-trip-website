@@ -10,4 +10,4 @@ def abort_msg(e):
   file_name = last_callstack[0]
   line_num = last_callstack[1]
   func_name = last_callstack[2]
-  return f"Exception raise in file: {file_name}, line {line_num}, in {func_name}: [{error_class}] {detail}."
+  return f'Exception raise in file: {file_name}, line {line_num}, in {func_name}: [{error_class}] {detail}.'

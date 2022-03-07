@@ -34,33 +34,33 @@ with app.app_context():
 
 app.config['ENV'] = config['App']['env']
 app.config['JSON_AS_ASCII'] = config['App'].getboolean('json_as_ascii')
-app.config["TEMPLATES_AUTO_RELOAD"] = config['App'].getboolean('templates_auto_reload')
+app.config['TEMPLATES_AUTO_RELOAD'] = config['App'].getboolean('templates_auto_reload')
 
 # Pages
-@app.route("/")
+@app.route('/')
 def index():
-  return render_template("index.html")
-@app.route("/attraction/<id>")
+  return render_template('index.html')
+@app.route('/attraction/<id>')
 def attraction(id):
-  return render_template("attraction.html")
-@app.route("/booking")
+  return render_template('attraction.html')
+@app.route('/booking')
 def booking():
-  return render_template("booking.html")
-@app.route("/thankyou")
+  return render_template('booking.html')
+@app.route('/thankyou')
 def thankyou():
-  return render_template("thankyou.html")
+  return render_template('thankyou.html')
 
 # API error handler
 @app.errorhandler(500)
 def internal_server_error(e):
-  return jsonify({"error": True, "message": str(e)}), 500
+  return jsonify({'error': True, 'message': str(e)}), 500
 
 @app.errorhandler(400)
 def not_found_error(e):
-  return jsonify({"error": True, "message": str(e)}), 400
+  return jsonify({'error': True, 'message': str(e)}), 400
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_id, url_prefix = '/api')
 
-if __name__ == "__main__":
-  app.run(host="127.0.0.1" if app.config['ENV'] == "development" else "0.0.0.0", port=3000, debug=True if app.config['ENV'] == "development" else False)
+if __name__ == '__main__':
+  app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)
