@@ -1,7 +1,9 @@
-from flask import Flask, current_app, request, render_template, abort, jsonify
-import configparser, traceback, sys
+from flask import Flask, current_app, render_template, jsonify
+import configparser
 from mysql.connector import Error, pooling
-from utils.with_cnx import with_cnx
+
+from models.attractions import bp_m_attractions
+from models.attraction_id import bp_m_attraction_id
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -25,21 +27,10 @@ def db_cnx():
   except Error as e:
     print('MySql Connection Pool error: ', e)
 
-def abort_msg(e):
-  error_class = e.__class__.__name__
-  detail = e.args[0]
-  cl, exc, tb = sys.exc_info() # 錯誤完整資訊 Call Stack
-  last_callstack = traceback.extract_tb(tb)[-1] # 最後一行錯誤訊息
-  file_name = last_callstack[0]
-  line_num = last_callstack[1]
-  func_name = last_callstack[2]
-  return f"Exception raise in file: {file_name}, line {line_num}, in {func_name}: [{error_class}] {detail}."
-
 app = Flask(__name__)
 with app.app_context():
   current_app.db_pool = create_db_pool()
   current_app.db_cnx = db_cnx
-  current_app.abort_msg = abort_msg
 
 app.config['ENV'] = config['App']['env']
 app.config['JSON_AS_ASCII'] = config['App'].getboolean('json_as_ascii')
@@ -68,74 +59,8 @@ def internal_server_error(e):
 def not_found_error(e):
   return jsonify({"error": True, "message": str(e)}), 400
 
-# API 旅遊景點 → 取得景點資料列表
-@with_cnx(need_commit = False)
-def query_attractions(cursor, page_unit, page, keyword):
-  start_index = 0 if page == 0 else page * page_unit
-  if keyword:
-    cursor.execute("""
-      select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
-      attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
-      from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
-      where name like %s
-      group by attraction_id limit %s, %s
-      """, ("%"+keyword+"%", start_index, page_unit))
-  else:
-    cursor.execute("""
-      select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
-      attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
-      from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
-      group by attraction_id limit %s, %s
-      """, (start_index, page_unit))
-  attractions = cursor.fetchall()
-  return attractions
-
-@app.route("/api/attractions", methods=["GET"])
-def api_attractions():
-  try:
-    page_unit = 12
-    page = request.args.get('page', type=int)
-    keyword = request.args.get('keyword')
-    if page is None:
-      abort(400, description="Parameter page <'int'> is required.")
-    else:
-      cols = ["id", "name", "category", "description", "address", "transport", "mrt", "latitude", "longitude", "images"]
-      values = query_attractions(page_unit, page, keyword)
-      result = [dict(zip(cols, value)) for value in values]
-      for index, row in enumerate(result):
-        result[index]["images"] = row["images"].split(",")
-      next_page = None if len(result) < page_unit else page + 1
-      return jsonify({"nextPage": next_page, "data": result})
-  except Exception as e:
-    abort(500, description=abort_msg(e))
-
-# API 旅遊景點 → 根據景點編號取得景點資料
-@with_cnx(need_commit = False)
-def query_attraction_id(cursor, attraction_id):
-  query_sql = """
-    select attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
-    attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) as images 
-    from attractions_imgs inner join attractions on attractions.id = attractions_imgs.attraction_id 
-    where attraction_id = %s
-    group by attraction_id
-    """
-  cursor.execute(query_sql, (attraction_id, ))
-  attraction = cursor.fetchone()
-  return attraction
-
-@app.route("/api/attraction/<int:attraction_id>", methods=["GET"])
-def api_attraction_id(attraction_id):
-  try:
-    cols = ["id", "name", "category", "description", "address", "transport", "mrt", "latitude", "longitude", "images"]
-    value = query_attraction_id(attraction_id)
-    result = dict(zip(cols, value))
-    result["images"] = result["images"].split(",")
-    return jsonify({"data": result})
-  except Exception as e:
-    if value is None:
-      abort(400, description="Parameter attraction id is incorrect.")
-    else:
-      abort(500, description=abort_msg(e))
+app.register_blueprint(bp_m_attractions, url_prefix = '/api')
+app.register_blueprint(bp_m_attraction_id, url_prefix = '/api')
 
 if __name__ == "__main__":
   app.run(host="127.0.0.1" if app.config['ENV'] == "development" else "0.0.0.0", port=3000, debug=True if app.config['ENV'] == "development" else False)
