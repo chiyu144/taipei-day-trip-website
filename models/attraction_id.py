@@ -17,7 +17,7 @@ def query_attraction_id(cursor, attraction_id):
     '''
   cursor.execute(query_sql, (attraction_id, ))
   columns = [col[0] for col in cursor.description]
-  attraction = [dict(zip(columns, row)) for row in cursor.fetchone()]
+  attraction = dict(zip(columns, cursor.fetchone()))
   return attraction
 
 @bp_m_attraction_id.route('/attraction/<int:attraction_id>', methods=['GET'])
