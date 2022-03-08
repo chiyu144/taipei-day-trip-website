@@ -3,11 +3,17 @@
 export const onImgLoaded = img => {
   if (img.complete) {
     // * 圖片已被載入 (圖片無情瞬間載好，不需做事)
-    return
+    return;
   } else {
     // * 如果圖片還沒載好，顯示 Skeleton
-    img.classList.add('skeleton')
+    img.classList.add('skeleton');
     // * 圖片載好後，關掉 Skeleton
-    img.onload = () => img.classList.remove('skeleton')
-  }
-}
+    img.onload = () => img.classList.remove('skeleton');
+  };
+};
+
+export const clearView = root => {
+  while (root.firstChild) {
+    root.removeChild(root.firstChild);
+  };
+};
