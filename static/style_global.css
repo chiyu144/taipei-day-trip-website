@@ -69,15 +69,14 @@ nav {
 }
 #main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  height: auto;
 }
 footer {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 0;
-  margin-top: 55px;
+  margin-top: 25px;
   font-weight: 700;
   color: var(--color-white);
   background-color: var(--color-gray-700);
@@ -124,17 +123,17 @@ footer {
 .grid {
   padding: 0 10px;
   overflow: hidden;
+  height: 100%;
 }
 .row {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 30px;
   margin: 0 -15px;
   justify-content: center;
 }
 .col {
   flex-grow: 1;
-  margin: 0 15px;
+  margin: 0 15px 30px 15px;
   transition: 0.3s all ease;
 }
 .col.col-1, .col.col-2, .col.col-3, .col.col-4,

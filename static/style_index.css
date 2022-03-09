@@ -31,11 +31,9 @@
 }
 #hero > div > .container > form > label { display: none;}
 #hero > div > .container > form > input {
-  display: inline-block;
   height: 100%;
   width: 400px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-radius: 5px 0 0 5px;
   border: 1px solid transparent;
   text-indent: 15px;
   font-weight: 700;
@@ -60,7 +58,7 @@
   background-origin: content-box;
   cursor: pointer;
 }
-#container-attractions { position: relative; flex: 1; }
+#container-attractions { position: relative; }
 .sentinel-index {
   height: 50px;
   margin-top: 55px;
