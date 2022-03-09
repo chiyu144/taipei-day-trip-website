@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台北一日遊</title>
+  {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_global.css') }}">
+  {% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav role="navigation">
+    <div class="container">
+      <div class="nav-bar">
+          <div id="logo"><a href="/">台北一日遊</a></div>
+          <div>
+            <a>預定行程</a>
+            <a>登入/註冊</a>
+          </div>
+      </div>
+    </div>
+  </nav>
+  <main id="main">
+    {% block body %}
+      // Dynamic Content.
+    {% endblock %}
+  </main>
+  <footer>COPYRIGHT © 2021 台北一日遊</footer>
+  <script type="module" src="{{ url_for('static', filename='index.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='apis.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='utils.js') }}"></script>
+</body>
+</html>

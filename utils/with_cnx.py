@@ -13,7 +13,7 @@ def with_cnx(need_commit = None):
         if need_commit:
           cnx.commit()
       except Error as e:
-        abort(500, description=f"Exception raise in utils/with_cnx: {e}")
+        abort(500, description=f'Exception raise in utils/with_cnx: {e}')
       except Exception:
         abort(500, description=current_app.abort_msg(Exception))
       finally:
