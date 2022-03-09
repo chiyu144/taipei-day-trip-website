@@ -40,6 +40,11 @@ img, picture, video, canvas, svg {
 }
 input, button, textarea, select { font: inherit; }
 p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color .15s ease-in;
+}
 /* --- Global UI --- */
 nav {
   background-color: var(--color-white);
@@ -58,6 +63,9 @@ nav {
   color: var(--color-cyan-800);
   font-weight: 700;
   font-size: var(--font-size-header);
+}
+#logo:hover {
+  color: var(--color-cyan-700);
 }
 #main {
   flex: 1;
@@ -81,7 +89,7 @@ footer {
 .sentinel {
   position: relative;
   height: 0;
-  transition: height .3s ease;
+  transition: height .1s ease;
 }
 .wrap-center {
   position: absolute;
@@ -113,7 +121,10 @@ footer {
   margin: 0 auto;
   max-width: 1200px;
 }
-.grid { overflow: hidden; }
+.grid {
+  padding: 0 10px;
+  overflow: hidden;
+}
 .row {
   display: flex;
   flex-wrap: wrap;

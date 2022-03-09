@@ -71,15 +71,16 @@ const searchAttractionId = async(e) => {
     isLoading = true;
     clearView(attractionsRow);
     wrapLoader.style.display = 'block';
-    const attractions = await getAttractions(0, keyword);
+    const attractions = await getAttractions(0, String(keyword));
     if (attractions.data.length > 0) {
       render(attractions);
     } else {
       wrapLoader.style.display = 'none';
       msgHint.textContent = `找不到名字包含 '${keyword}' 的景點。`
       msgHint.style.display = 'block';
-    }
-  }
+    };
+  };
+  document.querySelector('#search-attraction-name').value = '';
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -87,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const formAttractionId = document.querySelector('#form-attraction-id');
   const footer = document.querySelector('footer');
   const footerIO = new IntersectionObserver(async(e) => {
-    if(e[0].isIntersecting && nextPage !== null && !isLoading) {
+    if(e[0].isIntersecting && nextPage !== null && !isLoading && window.location.pathname === '/') {
       isLoading = true;
       console.log(`keyword: ${keyword}`);
       sentinel.classList.add('sentinel-index');
