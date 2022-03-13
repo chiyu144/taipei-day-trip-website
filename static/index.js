@@ -21,29 +21,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   const formAttractionId = document.querySelector('#form-attraction-id');
   const attractions = await getAttractions(nextPage, keyword);
   const footer = document.querySelector('footer');
-  console.log(history.state);
 
   const render = attractions => {
     msgHint.style.display = 'none';
     const fragment = document.createDocumentFragment();
-    attractions.data.forEach(({ name, category, mrt, images }, index) => {
+    attractions.data.forEach(({ id, name, category, mrt, images }, index) => {
       const attraction = document.createElement('div');
       attraction.classList.add('attraction', 'col-xs-12', 'col-md-6', 'col-lg-4', 'col-3', 'col');
       if(index === attractions.data.length - 1) {
         attraction.style.marginRight = 'auto';
       } 
       const link = document.createElement('a');
+      link.classList.add('link-attraction');
+      link.href = `./attraction/${id}`;
       
-      const wrapThumbnail = document.createElement('div');
+      const wrapThumbnail = document.createElement('span');
       wrapThumbnail.classList.add('wrap-thumbnail-attraction');
       const thumbnail = document.createElement('img');
       thumbnail.classList.add('thumbnail-attraction');
       thumbnail.src = images[0];
       onImgLoaded(thumbnail);
       
-      const title = document.createElement('div');
+      const title = document.createElement('a');
       title.classList.add('title-attraction');
       title.textContent = name;
+      title.href = `./attraction/${id}`;
     
       const subtitle = document.createElement('div');
       subtitle.classList.add('subtitle-attraction', 'row');
@@ -57,11 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
       wrapThumbnail.appendChild(thumbnail);
       link.appendChild(wrapThumbnail);
-      link.appendChild(title);
       subtitle.appendChild(mrtName);
       subtitle.appendChild(categoryName);
       
       attraction.appendChild(link);
+      attraction.appendChild(title);
       attraction.appendChild(subtitle);
       fragment.appendChild(attraction);
     });
@@ -93,11 +95,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const footerIO = new IntersectionObserver(async(e) => {
     if(e[0].isIntersecting && nextPage !== null && !isLoading && window.location.pathname === '/') {
       isLoading = true;
-      console.log(`keyword: ${keyword}`);
       sentinel.classList.add('sentinel-index');
       sentinel.appendChild(wrapLoader);
       wrapLoader.style.display = 'block';
-    
       const moreAttractions = await getAttractions(nextPage, keyword);
       render(moreAttractions);
   
@@ -110,6 +110,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   footerIO.observe(footer);
   formAttractionId.addEventListener('submit', searchAttractionId);
   window.addEventListener('popstate', () => {
-    console.log('UIUOUIO')
+    console.log('index popstate');
   })
 });
