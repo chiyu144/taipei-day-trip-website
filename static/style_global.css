@@ -70,13 +70,14 @@ nav {
 #main {
   flex: 1;
   height: auto;
+  margin-top: 55px;
+  padding-bottom: 25px;
 }
 footer {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 0;
-  margin-top: 25px;
   font-weight: 700;
   color: var(--color-white);
   background-color: var(--color-gray-700);
