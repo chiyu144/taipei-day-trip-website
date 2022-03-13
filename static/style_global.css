@@ -72,6 +72,8 @@ nav {
   height: auto;
   margin-top: 55px;
   padding-bottom: 25px;
+  display: flex;
+  flex-direction: column;
 }
 footer {
   display: flex;
