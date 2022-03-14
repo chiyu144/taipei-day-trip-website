@@ -9,9 +9,11 @@ const getAttraction = async(id) => {
   const detail = await res.json();
   return detail;
 };
+const detail = await getAttraction(id);
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const detail = await getAttraction(id);
+  const carousel = document.querySelector('#carousel-detail > .carousel');
+  const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
   const detailInfos = document.querySelectorAll('.detail-info');
   const formBooking = document.querySelector('#form-booking');
@@ -20,7 +22,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const initDetail = () => {
     if(detail.data?.length > 0) {
-      detail.data.forEach(({name, category, mrt, description, address, transport}, index) => {
+      detail.data.forEach(({name, category, mrt, description, address, transport, images}) => {
+        images.forEach((image, index) => {
+          const slide = document.createElement('div');
+          slide.classList.add('slide');
+          slide.setAttribute('data-slide-index', `${index}`);
+          const slideImage = document.createElement('img');
+          slideImage.src = image;
+          onImgLoaded(slideImage);
+          const indicatorButton = document.createElement('span');
+          indicatorButton.classList.add('indicator');
+          if(index === 0) {
+            indicatorButton.classList.add('active-indicator');
+          }
+          slide.appendChild(slideImage);
+          carousel.appendChild(slide);
+          wrapIndicator.appendChild(indicatorButton);
+        });
+
         detailInfos[0].textContent = name;
         detailInfos[1].textContent = `${category} at ${mrt}`;
         detailInfos[2].textContent = description;
