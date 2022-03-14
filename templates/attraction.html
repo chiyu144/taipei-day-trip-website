@@ -44,8 +44,10 @@
         </div>
         <div class="col-md-12 col col-detail col-detail-top col-detail-right">
           <form id="form-booking">
-            <div class="wrap-detail-skeleton skeleton"></div>
-            <div class="wrap-detail-skeleton skeleton"></div>
+            <div class="detail-skeleton skeleton"></div>
+            <div class="detail-info"></div>
+            <div class="detail-skeleton skeleton"></div>
+            <div class="detail-info"></div>
             <div>
               <div class="subtitle-detail">訂閱導覽行程</div>
               <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
@@ -57,7 +59,7 @@
               </div>
               <div>
                 <span class="subtitle-detail">選擇時間：</span>
-                <input type="radio" name="radio-booking" id="radio-booking-am"/>
+                <input type="radio" name="radio-booking" id="radio-booking-am" checked/>
                 <label for="radio-booking-am">
                   上半天
                 </label>
@@ -68,7 +70,7 @@
               </div>
               <div>
                 <span class="subtitle-detail">導覽費用：</span>
-                <span class="wrap-detail-skeleton skeleton"></span>
+                新台幣 <span id="msg-guide-fee">2000</span> 元
               </div>
               <div>
                 <button type="submit" class="button-cyan button-booking">開始預訂行程</button>
@@ -82,19 +84,22 @@
     <div class="grid grid-detail-bottom">
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
-          <div class="wrap-detail-skeleton skeleton"></div>
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">景點地址：</div>
-          <div class="wrap-detail-skeleton skeleton"></div>
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">交通方式：</div>
-          <div class="wrap-detail-skeleton skeleton"></div>
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
         </div>
       </div>
     </div>

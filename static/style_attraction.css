@@ -17,7 +17,7 @@
   margin: 0;
 }
 .col-detail-bottom {
-  margin: 0 0 20px 0;
+  margin: 0 0 30px 0;
 }
 .col-detail-bottom > div:last-child {
   margin-top: 10px;
@@ -42,36 +42,40 @@
 #form-booking {
   height: fit-content;
 }
-#form-booking > div:nth-child(1) {
+#form-booking > div:nth-child(2) {
   font-weight: 700;
   font-size: var(--font-size-lg);
   margin-bottom: 15px;
 }
-#form-booking > div:nth-child(2) {
+#form-booking > div:nth-child(4) {
   margin-bottom: 20px;
 }
-#form-booking > div:nth-child(3) {
+#form-booking > div:nth-child(5) {
   border-radius: 5px;
   background-color: var(--color-gray-300);
   padding: 15px 20px;
 }
-#form-booking > div:nth-child(3) > div {
+#form-booking > div:nth-child(5) > div {
   margin-bottom: 15px;
 }
-#form-booking > div:nth-child(3) > div:last-child > .button-booking {
+#form-booking > div:nth-child(5) > div:last-child > .button-booking {
   margin: 10px 0;
   width: 154px;
   height: 36px;
   font-size: var(--font-size-md);
 }
-.wrap-detail-skeleton {
+.detail-skeleton {
   width: 50%;
   height: 24px;
   border-radius: 5px;
   background-color: var(--color-gray-50);
 }
-.grid-detail-bottom .wrap-detail-skeleton {
+.grid-detail-bottom .detail-skeleton {
   width: 100%;
+}
+.detail-info {
+  opacity: 0;
+  transition: opacity .2s ease-in;
 }
 #form-booking > div:nth-child(3) > div:nth-child(3),
 #form-booking > div:nth-child(3) > div:nth-child(4),
