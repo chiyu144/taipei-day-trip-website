@@ -1,6 +1,3 @@
-/* #container-detail {
-  padding: 0 15px;
-} */
 .grid-detail-top {
   padding: 0 15px;
 }
@@ -163,7 +160,7 @@
   }
   .col-detail-top.col-detail-right {
     margin-top: 20px;
-    height: 390px;
+    height: fit-content;
     padding: 0 10px;
   }
   .hr-detail {
@@ -172,10 +169,10 @@
   #carousel-detail {
     border-radius: 0;
   }
-  #form-booking > div:nth-child(3) > div:last-child {
+  #form-booking > div:nth-child(5) > div:last-child {
     margin-bottom: 0;
   }
-  #form-booking > div:nth-child(3) > div:last-child > .button-booking {
+  #form-booking > div:nth-child(5) > div:last-child > .button-booking {
     margin: 10px 0 0 0;
   }
   .spacer-detail {
