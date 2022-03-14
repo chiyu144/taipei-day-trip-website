@@ -182,3 +182,8 @@
     max-height: 55px;
   }
 }
+@media screen and (max-width: 737px) {
+  .row-detail-top {
+    margin-top: 0;
+  }
+}

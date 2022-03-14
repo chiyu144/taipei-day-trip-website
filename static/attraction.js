@@ -35,11 +35,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           if(index === 0) {
             indicatorButton.classList.add('active-indicator');
           }
+          if (images.length > 15) {
+            indicatorButton.style.margin = '0 4px';
+          }
           slide.appendChild(slideImage);
           carousel.appendChild(slide);
           wrapIndicator.appendChild(indicatorButton);
         });
-
         detailInfos[0].textContent = name;
         detailInfos[1].textContent = `${category} at ${mrt}`;
         detailInfos[2].textContent = description;
