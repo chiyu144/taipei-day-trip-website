@@ -17,3 +17,66 @@ export const clearView = root => {
     root.removeChild(root.firstChild);
   };
 };
+
+// * 自己研究出來的輪播
+export class Carousel {
+  constructor(id) {
+    this.wrapCarousel = document.querySelector(`#${id}`);
+    this.carousel = this.wrapCarousel.querySelector('.carousel');
+    this.slides = this.carousel.querySelectorAll('.slide');
+    this.carouselLength = this.slides.length;
+    this.currentSlideNum = 1;
+    this.currentCarouselPos = -100;
+    this.direction = undefined;
+    this.isAnimating = false;
+  }
+
+  init() {
+    this.listenEvents();
+    this.cloneFirstAndLastSlide();
+  }
+
+  listenEvents() {
+    console.log('listenEvent', this);
+    const arrowButtons = this.wrapCarousel.querySelectorAll('.arrow');
+    const indicatorButtons = this.wrapCarousel.querySelectorAll('.indicator');
+    arrowButtons.forEach(arrowButton => {
+      arrowButton.addEventListener('click', e => {
+        console.log('click carousel arrow button', this);
+        this.direction = parseInt(e.currentTarget.getAttribute('data-direction'));
+        if (!this.isAnimating) { 
+          this.currentSlideNum += this.direction;
+          this.slide(null);
+        };
+      });
+    });
+    indicatorButtons.forEach((indicatorButton, targetSlideIndex) => {
+      indicatorButton.addEventListener('click', e => {
+        const targetSlide = this.slides[targetSlideIndex];
+        if (this.currentSlideNum !== targetSlideIndex + 1 && !this.isAnimating) {
+          direction = currentSlideNum - 1 > targetSlideIndex ? -1 : 1;
+          slide(targetSlideIndex);
+        };
+      })
+    })
+  }
+
+  cloneFirstAndLastSlide() {
+    const firstSlide = this.slides[0];
+    const firstSlideClone = firstSlide.cloneNode(true);
+    const lastSlideClone = this.slides[this.carouselLength - 1].cloneNode(true);
+    firstSlideClone.removeAttribute('data-slide-index');
+    lastSlideClone.removeAttribute('data-slide-index');
+    this.carousel.appendChild(firstSlideClone);
+    this.carousel.insertBefore(lastSlideClone, firstSlide);
+  };
+
+  clickArrowButton() {
+
+  };
+
+  clickIndicator() {
+
+  };
+
+}
