@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const wrapLoader = document.querySelector('.wrap-center');
   const containerAttractions = document.querySelector('#container-attractions');
   const sentinel = document.querySelector('.sentinel');
-  const formAttractionId = document.querySelector('#form-attraction-id');
+  const formSearchAttraction = document.querySelector('#form-search-attraction');
   const attractions = await getAttractions(nextPage, keyword);
   const footer = document.querySelector('footer');
 
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const searchAttractionId = async(e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    keyword = !formData.get('search-attraction-name') ? undefined : formData.get('search-attraction-name');
+    keyword = !formData.get('search-attraction') ? undefined : formData.get('search-attraction');
     if(keyword) {
       isLoading = true;
       clearView(rowAttractions);
@@ -89,13 +89,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         msgHint.style.display = 'block';
       };
     };
-    document.querySelector('#search-attraction-name').value = '';
+    document.querySelector('#search-attraction').value = '';
   };
 
   const footerIO = new IntersectionObserver(async(e) => {
     if(e[0].isIntersecting && nextPage !== null && !isLoading && window.location.pathname === '/') {
       isLoading = true;
-      sentinel.classList.add('sentinel-index');
+      sentinel.classList.add('sentinel-attractions');
       sentinel.appendChild(wrapLoader);
       wrapLoader.style.display = 'block';
       const moreAttractions = await getAttractions(nextPage, keyword);
@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       sentinel.classList.remove('sentinel-index');
       containerAttractions.appendChild(wrapLoader);
     }
-  }, { threshold: [0.95] });
+  }, { threshold: [0.98] });
 
   render(attractions);
   footerIO.observe(footer);
-  formAttractionId.addEventListener('submit', searchAttractionId);
+  formSearchAttraction.addEventListener('submit', searchAttractionId);
   window.addEventListener('popstate', () => {
     console.log('index popstate');
   })

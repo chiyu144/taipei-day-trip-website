@@ -8,9 +8,9 @@
     <div class="container">
       <div>輕鬆享受台北一日悠閒</div>
       <div>探索每個角落，體驗城市的深度旅遊行程</div>
-      <form id="form-attraction-id">
-        <label for="search-attraction-name">景點名稱</label>
-        <input type="text" id="search-attraction-name" name="search-attraction-name" placeholder="輸入景點名稱查詢"></input><!----><button type="submit"></button>
+      <form id="form-search-attraction">
+        <label for="search-attraction">景點名稱</label>
+        <input type="text" id="search-attraction" name="search-attraction" placeholder="輸入景點名稱查詢"></input><!----><button type="submit"></button>
       </form>
     </div>
   </div>
@@ -24,4 +24,7 @@
       <div class="sentinel"></div>
     </div>
   </div>
+{% endblock %}
+{% block script %}
+  <script type="module" src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}

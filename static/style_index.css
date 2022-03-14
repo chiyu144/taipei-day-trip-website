@@ -1,5 +1,5 @@
 #hero {
-  height: 320px;
+  flex: 0 0 320px;
   background: url('/static/image/welcome.png') no-repeat,
               linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-cyan-700) 100%);
   background-position: 83% bottom, center center;
@@ -21,12 +21,12 @@
   text-shadow: 0px 0px 30px var(--color-text-shadow);
   margin-bottom: 25px;
 }
-#form-attraction-id {
+#form-search-attraction {
   height: 46px;
   display: flex;
 }
-#form-attraction-id > label { display: none;}
-#form-attraction-id > input {
+#form-search-attraction > label { display: none;}
+#form-search-attraction > input {
   height: 100%;
   width: 400px;
   border-radius: 5px 0 0 5px;
@@ -37,10 +37,10 @@
   outline: none;
   transition: border .2s ease;
 }
-#form-attraction-id > input:focus {
+#form-search-attraction > input:focus {
   border: 1px solid var(--color-cyan-800);
 }
-#form-attraction-id > button {
+#form-search-attraction > button {
   display: inline-block;
   height: 100%;
   width: 60px;
@@ -57,8 +57,9 @@
 #container-attractions {
   position: relative;
   flex: 1 0 auto;
+  height: auto;
 }
-.sentinel-index {
+.sentinel-attractions {
   height: 50px;
   margin: 20px 0 25px 0;
 }
@@ -109,11 +110,11 @@
 }
 @media screen and (max-width: 1200px) {
   #hero { background-position: 425px bottom, center; }
-  #form-attraction-id > input { width: 320px; }
+  #form-search-attraction > input { width: 320px; }
 }
 @media screen and (max-width: 854px) {
   #hero { background-position: 265px bottom, center; }
-  #form-attraction-id > input { width: 320px; }
+  #form-search-attraction > input { width: 320px; }
 }
 @media screen and (max-width: 480px) {
   #hero { height: 280px; }
@@ -122,7 +123,7 @@
     background-size: 80%, 100%;
   }
   #hero > .container { padding: 65px 0 0 10px; }
-  #form-attraction-id > input { width: 230px; }
-  .attraction { height: 280px; }
+  #form-search-attraction > input { width: 230px; }
+  .attraction { flex: 0 0 280px; }
   .wrap-thumbnail-attraction { height: 202px; }
 }

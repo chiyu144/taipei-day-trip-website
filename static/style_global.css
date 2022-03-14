@@ -126,7 +126,7 @@ footer {
 .grid {
   padding: 0 10px;
   overflow: hidden;
-  height: 100%;
+  height: fit-content;
 }
 .row {
   display: flex;
