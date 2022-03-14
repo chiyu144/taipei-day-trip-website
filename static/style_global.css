@@ -46,6 +46,17 @@ a {
   transition: color .15s ease-in;
 }
 /* --- Global UI --- */
+.button-cyan {
+  background-color: var(--color-cyan-800);
+  color: var(--color-white);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.button-cyan:hover {
+  background-color: var(--color-cyan-700);
+}
 nav {
   background-color: var(--color-white);
   position: fixed;
@@ -113,7 +124,7 @@ footer {
   display: inline-block;
   -webkit-mask: linear-gradient(-60deg,#000 30%,#0005,#000 70%) right / 300% 100%;
   background-repeat: no-repeat;
-  animation: shimmer 2s infinite;
+  animation: shimmer 1s infinite;
   background-color: var(--color-gray-300);
 }
 @keyframes shimmer { 100% { -webkit-mask-position:left } }
@@ -137,7 +148,6 @@ footer {
 .col {
   flex-grow: 1;
   margin: 0 15px 30px 15px;
-  transition: 0.3s all ease;
 }
 .col.col-1, .col.col-2, .col.col-3, .col.col-4,
 .col.col-5, .col.col-6, .col.col-7, .col.col-8,

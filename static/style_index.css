@@ -94,7 +94,7 @@
   cursor: pointer;
   color: var(--color-gray-700);
   font-weight: 700;
-  margin: 11px 10px 8px 10px;
+  margin: 10px;
   overflow:hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -104,9 +104,11 @@
   color: var(--color-cyan-700);
 }
 .subtitle-attraction {
-  padding: 0 10px 13px 10px;
+  margin: 10px;
   font-weight: 400;
   color: var(--color-gray-700);
+  display: flex;
+  justify-content: space-between;
 }
 @media screen and (max-width: 1200px) {
   #hero { background-position: 425px bottom, center; }
@@ -124,6 +126,6 @@
   }
   #hero > .container { padding: 65px 0 0 10px; }
   #form-search-attraction > input { width: 230px; }
-  .attraction { flex: 0 0 280px; }
+  .attraction { height: 285px; }
   .wrap-thumbnail-attraction { height: 202px; }
 }

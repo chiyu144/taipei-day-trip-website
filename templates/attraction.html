@@ -6,9 +6,9 @@
 {% endblock %}
 {% block body %}
   <div id="container-detail" class="container">
-    <div class="grid grid-detail">
+    <div class="grid grid-detail-top">
       <div class="row row-detail-top">
-        <div class="col col-detail col-detail-top col-detail-left">
+        <div class="col-md-12 col col-detail col-detail-top col-detail-left">
           <div id="carousel-detail" class="wrap-carousel">
             <div class="carousel">
               <div class="slide" data-slide-index="0">
@@ -42,35 +42,36 @@
             </div>
           </div>
         </div>
-        <div class="col col-detail col-detail-top col-detail-right">
+        <div class="col-md-12 col col-detail col-detail-top col-detail-right">
           <form id="form-booking">
-            <div>平安鐘</div>
-            <div>公共藝術 At 忠孝復興</div>
+            <div class="wrap-detail-skeleton skeleton"></div>
+            <div class="wrap-detail-skeleton skeleton"></div>
             <div>
               <div class="subtitle-detail">訂閱導覽行程</div>
               <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
               <div>
-                <span class="subtitle-detail">選擇日期</span>
-                <label for="date-detail">
-                  <input type="date" name="date-detail" id="date-detail"/>
+                <span class="subtitle-detail">選擇日期：</span>
+                <input type="date" name="date-booking" id="date-booking"/>
+                <label for="date-booking">
                 </label>
               </div>
               <div>
-                <span class="subtitle-detail">選擇時間</span>
-                <label for="radio-detail-am" class="radio-detail">
-                  <input type="radio" name="radio-detail-am" id="radio-detail-am"/>
+                <span class="subtitle-detail">選擇時間：</span>
+                <input type="radio" name="radio-booking" id="radio-booking-am"/>
+                <label for="radio-booking-am">
                   上半天
                 </label>
-                <label for="radio-detail-pm" class="radio-detail">
-                  <input type="radio" name="radio-detail-pm" id="radio-detail-pm"/>
+                <input type="radio" name="radio-booking" id="radio-booking-pm"/>
+                <label for="radio-booking-pm">
                   下半天
                 </label>
               </div>
               <div>
-                <span class="subtitle-detail">導覽費用</span>
+                <span class="subtitle-detail">導覽費用：</span>
+                <span class="wrap-detail-skeleton skeleton"></span>
               </div>
               <div>
-                <button>開始預訂行程</button>
+                <button type="submit" class="button-cyan button-booking">開始預訂行程</button>
               </div>
             </div>
           </form>
@@ -78,20 +79,22 @@
       </div>
     </div>
     <hr class="hr-detail"/>
-    <div class="grid">
+    <div class="grid grid-detail-bottom">
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
-          1312132
+          <div class="wrap-detail-skeleton skeleton"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">景點地址：</div>
+          <div class="wrap-detail-skeleton skeleton"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">交通方式：</div>
+          <div class="wrap-detail-skeleton skeleton"></div>
         </div>
       </div>
     </div>

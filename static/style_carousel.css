@@ -1,5 +1,4 @@
 .wrap-carousel {
-  border-radius: 5px;
   position: relative;
   overflow: hidden;
 }
@@ -27,8 +26,8 @@
   object-fit: cover;
 }
 .arrow {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

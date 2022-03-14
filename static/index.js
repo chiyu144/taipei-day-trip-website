@@ -48,14 +48,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       title.href = `./attraction/${id}`;
     
       const subtitle = document.createElement('div');
-      subtitle.classList.add('subtitle-attraction', 'row');
+      subtitle.classList.add('subtitle-attraction');
       const mrtName = document.createElement('div');
-      mrtName.classList.add('col');
       mrtName.textContent = mrt;
       const categoryName = document.createElement('div');
-      categoryName.classList.add('col');
       categoryName.textContent = category;
-      categoryName.style.textAlign = 'end';
     
       wrapThumbnail.appendChild(thumbnail);
       link.appendChild(wrapThumbnail);
@@ -100,8 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       wrapLoader.style.display = 'block';
       const moreAttractions = await getAttractions(nextPage, keyword);
       render(moreAttractions);
-  
-      sentinel.classList.remove('sentinel-index');
+      sentinel.classList.remove('sentinel-attractions');
       containerAttractions.appendChild(wrapLoader);
     }
   }, { threshold: [0.98] });
