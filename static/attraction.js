@@ -9,9 +9,9 @@ const getAttraction = async(id) => {
   const detail = await res.json();
   return detail;
 };
-const detail = await getAttraction(id);
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const detail = await getAttraction(id);
   const carousel = document.querySelector('#carousel-detail > .carousel');
   const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');

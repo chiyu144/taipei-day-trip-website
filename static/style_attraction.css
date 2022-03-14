@@ -19,6 +19,12 @@
 .col-detail-bottom {
   margin: 0 0 30px 0;
 }
+.spacer-detail {
+  width: 65px;
+  height: 65px;
+  max-width: 65px;
+  max-height: 65px;
+}
 .col-detail-bottom > div:last-child {
   margin-top: 10px;
 }
@@ -171,5 +177,11 @@
   }
   #form-booking > div:nth-child(3) > div:last-child > .button-booking {
     margin: 10px 0 0 0;
+  }
+  .spacer-detail {
+    width: 55px;
+    height: 55px;
+    max-width: 55px;
+    max-height: 55px;
   }
 }
