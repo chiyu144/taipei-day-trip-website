@@ -2,9 +2,101 @@
 {% block head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='style_global.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style_attraction.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_carousel.css') }}">
 {% endblock %}
 {% block body %}
-  <div id="container-attration-id" class="container">
-    <p>attraction</p>
+  <div id="container-detail" class="container">
+    <div class="grid grid-detail">
+      <div class="row row-detail-top">
+        <div class="col col-detail col-detail-top col-detail-left">
+          <div id="carousel-detail" class="wrap-carousel">
+            <div class="carousel">
+              <div class="slide" data-slide-index="0">
+                <img src='https://source.unsplash.com/random/?cat' />
+              </div>
+              <div class="slide" data-slide-index="1">
+                <img src='https://source.unsplash.com/random/?sky' />
+              </div>
+              <div class="slide" data-slide-index="2">
+                <img src='https://source.unsplash.com/random/?sakura' />
+              </div>
+              <div class="slide" data-slide-index="3">
+                <img src='https://source.unsplash.com/random/?kyoto' />
+              </div>
+              <div class="slide" data-slide-index="4">
+                <img src='https://source.unsplash.com/random/?cafe' />
+              </div>
+            </div>
+            <div class="arrow left" data-direction="-1">
+              <img src='/static/image/btn_leftArrow.png' />
+            </div>
+            <div class="arrow right" data-direction="1">
+              <img src='/static/image/btn_rightArrow.png' />
+            </div>
+            <div class="wrap-indicator">
+              <span class="indicator active-indicator"></span>
+              <span class="indicator"></span>
+              <span class="indicator"></span>
+              <span class="indicator"></span>
+              <span class="indicator"></span>
+            </div>
+          </div>
+        </div>
+        <div class="col col-detail col-detail-top col-detail-right">
+          <form id="form-booking">
+            <div>平安鐘</div>
+            <div>公共藝術 At 忠孝復興</div>
+            <div>
+              <div class="subtitle-detail">訂閱導覽行程</div>
+              <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
+              <div>
+                <span class="subtitle-detail">選擇日期</span>
+                <label for="date-detail">
+                  <input type="date" name="date-detail" id="date-detail"/>
+                </label>
+              </div>
+              <div>
+                <span class="subtitle-detail">選擇時間</span>
+                <label for="radio-detail-am" class="radio-detail">
+                  <input type="radio" name="radio-detail-am" id="radio-detail-am"/>
+                  上半天
+                </label>
+                <label for="radio-detail-pm" class="radio-detail">
+                  <input type="radio" name="radio-detail-pm" id="radio-detail-pm"/>
+                  下半天
+                </label>
+              </div>
+              <div>
+                <span class="subtitle-detail">導覽費用</span>
+              </div>
+              <div>
+                <button>開始預訂行程</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <hr class="hr-detail"/>
+    <div class="grid">
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          1312132
+        </div>
+      </div>
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          <div class="subtitle-detail">景點地址：</div>
+        </div>
+      </div>
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          <div class="subtitle-detail">交通方式：</div>
+        </div>
+      </div>
+    </div>
   </div>
+{% endblock %}
+{% block script %}
+  <script type="module" src="{{ url_for('static', filename='attraction.js') }}"></script>
 {% endblock %}

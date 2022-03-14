@@ -1,0 +1,57 @@
+/* #container-detail {
+  padding: 0 15px;
+} */
+.grid-detail {
+  padding: 0 15px;
+}
+.row-detail-top {
+  flex-wrap: nowrap;
+  margin-top: 37px;
+  height: 406px;
+}
+.row-detail-bottom {
+  justify-content: flex-start;
+  margin: 0;
+}
+.col-detail {
+  transition: unset;
+}
+.col-detail-top {
+  transition: unset;
+}
+.col-detail-bottom {
+  margin: 0 0 20px 0;
+}
+.col-detail-left {
+  flex-basis: 47%;
+  margin-bottom: 0;
+}
+.col-detail-right {
+  flex-basis: 53%;
+  margin-bottom: 11px;
+}
+.hr-detail {
+  margin: 37px 0 50px 0;
+}
+.subtitle-detail {
+  font-weight: 700;
+}
+#form-booking {
+  height: 100%;
+}
+#form-booking > div:nth-child(1) {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  margin-bottom: 15px;
+}
+#form-booking > div:nth-child(2) {
+  margin-bottom: 20px;
+}
+#form-booking > div:nth-child(3) {
+  border-radius: 5px;
+  background-color: var(--color-gray-300);
+  padding: 15px 20px;
+}
+#form-booking > div:nth-child(3) > div {
+  margin-bottom: 15px;
+}
