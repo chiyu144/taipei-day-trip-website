@@ -1,36 +1,32 @@
 #hero {
-  height: 320px;
-  background: linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-cyan-700) 100%);
-  margin: 55px 0;
-}
-#hero > div {
-  background-image: url('/static/image/welcome.png');
-  background-repeat: no-repeat;
-  background-position: 83% bottom;
+  flex: 0 0 320px;
+  background: url('/static/image/welcome.png') no-repeat,
+              linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-cyan-700) 100%);
+  background-position: 83% bottom, center center;
   background-origin: content-box;
   background-size: contain;
-  height: 100%;
+  margin-bottom: 55px;
 }
-#hero > div > .container {
+#hero > .container {
   color: var(--color-gray-50);
   padding: 85px 0 0 10px;
 }
-#hero > div > .container > div:nth-child(1) {
+#hero > .container > div:nth-child(1) {
   text-shadow: 0px 0px 30px var(--color-text-shadow);
   font-size: var(--font-size-slogan);
   font-weight: 700;
   margin-bottom: 15px;
 }
-#hero > div > .container > div:nth-child(2) {
+#hero > .container > div:nth-child(2) {
   text-shadow: 0px 0px 30px var(--color-text-shadow);
   margin-bottom: 25px;
 }
-#hero > div > .container > form {
+#form-search-attraction {
   height: 46px;
   display: flex;
 }
-#hero > div > .container > form > label { display: none;}
-#hero > div > .container > form > input {
+#form-search-attraction > label { display: none;}
+#form-search-attraction > input {
   height: 100%;
   width: 400px;
   border-radius: 5px 0 0 5px;
@@ -41,10 +37,10 @@
   outline: none;
   transition: border .2s ease;
 }
-#hero > div > .container > form > input:focus {
+#form-search-attraction > input:focus {
   border: 1px solid var(--color-cyan-800);
 }
-#hero > div > .container > form > button {
+#form-search-attraction > button {
   display: inline-block;
   height: 100%;
   width: 60px;
@@ -58,10 +54,14 @@
   background-origin: content-box;
   cursor: pointer;
 }
-#container-attractions { position: relative; }
-.sentinel-index {
+#container-attractions {
+  position: relative;
+  flex: 1 0 auto;
+  height: auto;
+}
+.sentinel-attractions {
   height: 50px;
-  margin-top: 55px;
+  margin: 20px 0 25px 0;
 }
 .attraction {
   height: 242px;
@@ -70,52 +70,62 @@
   background-color: var(--color-white);
   overflow: hidden;
 }
-.wrap-attraction-thumbnail {
+.link-attraction {
+  display: block;
+}
+.wrap-thumbnail-attraction {
+  display: block;
   width: 100%;
   height: 160px;
   overflow: hidden;
   cursor: pointer;
 }
-.attraction-thumbnail {
+.thumbnail-attraction {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .22s ease-in;
+  transition: transform .2s ease-in;
 }
-.attraction-thumbnail:hover {
+.thumbnail-attraction:hover {
   transform: scale(1.2);
 }
-.attraction-title {
+.title-attraction {
+  display: block;
   cursor: pointer;
   color: var(--color-gray-700);
   font-weight: 700;
-  padding: 13px 10px 8px 10px;
-  width: 100%; max-width: 200px;
+  margin: 10px;
   overflow:hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  transition: color .2s ease-in;
 }
-.attraction-subtitle {
-  padding: 0 10px 13px 10px;
+.title-attraction:hover {
+  color: var(--color-cyan-700);
+}
+.subtitle-attraction {
+  margin: 10px;
   font-weight: 400;
   color: var(--color-gray-700);
+  display: flex;
+  justify-content: space-between;
 }
 @media screen and (max-width: 1200px) {
-  #hero > div { background-position: 425px bottom; }
-  #hero > div > .container > form > input { width: 320px; }
+  #hero { background-position: 425px bottom, center; }
+  #form-search-attraction > input { width: 320px; }
 }
 @media screen and (max-width: 854px) {
-  #hero > div { background-position: 265px bottom; }
-  #hero > div > .container > form > input { width: 320px; }
+  #hero { background-position: 265px bottom, center; }
+  #form-search-attraction > input { width: 320px; }
 }
 @media screen and (max-width: 480px) {
   #hero { height: 280px; }
-  #hero > div {
-    background-position: 125px bottom;
-    background-size: 80%;
+  #hero {
+    background-position: 125px bottom, center;
+    background-size: 80%, 100%;
   }
-  #hero > div > .container { padding: 65px 0 0 10px; }
-  #hero > div > .container > form > input { width: 230px; }
-  .attraction { height: 280px; }
-  .wrap-attraction-thumbnail { height: 202px; }
+  #hero > .container { padding: 65px 0 0 10px; }
+  #form-search-attraction > input { width: 230px; }
+  .attraction { height: 285px; }
+  .wrap-thumbnail-attraction { height: 202px; }
 }

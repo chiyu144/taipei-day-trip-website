@@ -25,7 +25,7 @@ def api_attraction_id(attraction_id):
   try:
     result = query_attraction_id(attraction_id)
     result['images'] = result['images'].split(',')
-    return jsonify({'data': result})
+    return jsonify({'data': [result]})
   except Exception as e:
     if result is None:
       abort(400, description='Parameter attraction id is incorrect.')

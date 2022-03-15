@@ -21,7 +21,7 @@ export const getAttractionsApi = async(page, keyword) => {
   }
 };
 
-export const getAttractionIdApi = async(id) => {
+export const getAttractionApi = async(id) => {
   try {
     const apiUrl = new URL(`/api/attraction/${id}`, host);
     const res = await fetch(apiUrl.toString(), {

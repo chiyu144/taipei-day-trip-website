@@ -14,7 +14,6 @@
   --color-gray-50: #f8f8f8;
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-index-bg: #eff3f5;
   --color-text-shadow: #aabbcc;
 }
 /* --- My custom CSS reset --- */
@@ -31,7 +30,7 @@ body {
   min-height: 100vh;
   font-family: 'Noto Sans TC', sans-serif;
   font-size: var(--font-size-xs);
-  background-color: var(--color-index-bg);
+  background-color: var(--color-white);
   color: var(--color-gray-800);
 }
 img, picture, video, canvas, svg {
@@ -46,11 +45,23 @@ a {
   transition: color .15s ease-in;
 }
 /* --- Global UI --- */
+.button-cyan {
+  background-color: var(--color-cyan-800);
+  color: var(--color-white);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.button-cyan:hover {
+  background-color: var(--color-cyan-700);
+}
 nav {
   background-color: var(--color-white);
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 9999;
+  border-bottom: 1px solid var(--color-gray-300);
 }
 .nav-bar {
   display: flex;
@@ -70,13 +81,16 @@ nav {
 #main {
   flex: 1;
   height: auto;
+  margin-top: 55px;
+  padding-bottom: 25px;
+  display: flex;
+  flex-direction: column;
 }
 footer {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 0;
-  margin-top: 25px;
   font-weight: 700;
   color: var(--color-white);
   background-color: var(--color-gray-700);
@@ -110,7 +124,7 @@ footer {
   display: inline-block;
   -webkit-mask: linear-gradient(-60deg,#000 30%,#0005,#000 70%) right / 300% 100%;
   background-repeat: no-repeat;
-  animation: shimmer 2s infinite;
+  animation: shimmer 1s infinite;
   background-color: var(--color-gray-300);
 }
 @keyframes shimmer { 100% { -webkit-mask-position:left } }
@@ -123,7 +137,7 @@ footer {
 .grid {
   padding: 0 10px;
   overflow: hidden;
-  height: 100%;
+  height: fit-content;
 }
 .row {
   display: flex;
@@ -134,7 +148,6 @@ footer {
 .col {
   flex-grow: 1;
   margin: 0 15px 30px 15px;
-  transition: 0.3s all ease;
 }
 .col.col-1, .col.col-2, .col.col-3, .col.col-4,
 .col.col-5, .col.col-6, .col.col-7, .col.col-8,

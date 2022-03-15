@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_global.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_attraction.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_carousel.css') }}">
+{% endblock %}
+{% block body %}
+  <div id="container-detail" class="container">
+    <div class="grid grid-detail-top">
+      <div class="row row-detail-top">
+        <div class="col-md-12 col col-detail col-detail-top col-detail-left">
+          <div id="carousel-detail" class="wrap-carousel">
+            <div class="carousel">
+              <!-- slides -->
+            </div>
+            <div class="arrow left" data-direction="-1">
+              <img src='/static/image/btn_leftArrow.png' />
+            </div>
+            <div class="arrow right" data-direction="1">
+              <img src='/static/image/btn_rightArrow.png' />
+            </div>
+            <div class="wrap-indicator">
+              <!-- indicator buttons -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col col-detail col-detail-top col-detail-right">
+          <form id="form-booking">
+            <div class="detail-skeleton skeleton"></div>
+            <div class="detail-info"></div>
+            <div class="detail-skeleton skeleton"></div>
+            <div class="detail-info"></div>
+            <div>
+              <div class="subtitle-detail">訂閱導覽行程</div>
+              <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
+              <div>
+                <span class="subtitle-detail">選擇日期：</span>
+                <input type="date" name="date-booking" id="date-booking"/>
+                <label for="date-booking">
+                </label>
+              </div>
+              <div>
+                <span class="subtitle-detail">選擇時間：</span>
+                <input type="radio" name="radio-booking" id="radio-booking-am" checked/>
+                <label for="radio-booking-am">
+                  上半天
+                </label>
+                <input type="radio" name="radio-booking" id="radio-booking-pm"/>
+                <label for="radio-booking-pm">
+                  下半天
+                </label>
+              </div>
+              <div>
+                <span class="subtitle-detail">導覽費用：</span>
+                新台幣 <span id="msg-guide-fee">2000</span> 元
+              </div>
+              <div>
+                <button type="submit" class="button-cyan button-booking">開始預訂行程</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <hr class="hr-detail"/>
+    <div class="grid grid-detail-bottom">
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
+        </div>
+      </div>
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          <div class="subtitle-detail">景點地址：</div>
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
+        </div>
+      </div>
+      <div class="row row-detail-bottom">
+        <div class="col col-detail col-detail-bottom">
+          <div class="subtitle-detail">交通方式：</div>
+          <div class="detail-skeleton skeleton"></div>
+          <div class="detail-info"></div>
+        </div>
+        <div class="spacer-detail"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+  <script type="module" src="{{ url_for('static', filename='attraction.js') }}"></script>
+{% endblock %}
