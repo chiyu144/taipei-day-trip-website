@@ -3,7 +3,7 @@ import configparser
 from mysql.connector import Error, pooling
 
 from models.attractions import bp_m_attractions
-from models.attraction_id import bp_m_attraction_id
+from models.attraction_spot import bp_m_attraction_spot
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -60,7 +60,7 @@ def not_found_error(e):
   return jsonify({'error': True, 'message': str(e)}), 400
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
-app.register_blueprint(bp_m_attraction_id, url_prefix = '/api')
+app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')
 
 if __name__ == '__main__':
   app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)

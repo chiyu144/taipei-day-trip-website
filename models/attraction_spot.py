@@ -2,12 +2,12 @@ from flask import Blueprint, abort, jsonify
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
 
-bp_m_attraction_id = Blueprint('m_attraction_id', __name__)
+bp_m_attraction_spot = Blueprint('m_attraction_spot', __name__)
 
 # API 旅遊景點 → 根據景點編號取得景點資料
 
 @with_cnx(need_commit = False)
-def query_attraction_id(cursor, attraction_id):
+def query_attraction_spot(cursor, attraction_id):
   query_sql = '''
     SELECT attractions.id, attractions.name, attractions.category, attractions.description, attractions.address, 
     attractions.transport, attractions.mrt, attractions.latitude, attractions.longitude, group_concat(attractions_imgs.img_url) AS images 
@@ -20,10 +20,10 @@ def query_attraction_id(cursor, attraction_id):
   attraction = dict(zip(columns, cursor.fetchone()))
   return attraction
 
-@bp_m_attraction_id.route('/attraction/<int:attraction_id>', methods=['GET'])
-def api_attraction_id(attraction_id):
+@bp_m_attraction_spot.route('/attraction/<int:attraction_id>', methods=['GET'])
+def api_attraction_spot(attraction_id):
   try:
-    result = query_attraction_id(attraction_id)
+    result = query_attraction_spot(attraction_id)
     result['images'] = result['images'].split(',')
     return jsonify({'data': [result]})
   except Exception as e:

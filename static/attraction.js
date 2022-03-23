@@ -1,17 +1,17 @@
-import { getAttractionApi } from './apis.js';
-import { onImgLoaded, clearView, Carousel } from './utils.js';
+import { getAttractionSpotApi } from './apis.js';
+import { onImgLoaded, Carousel } from './utils.js';
 
 let attractionUrl = new URL(window.location);
 let id = attractionUrl.pathname.split('/')[2];
 
-const getAttraction = async(id) => {
-  const res = await getAttractionApi(id);
+const getAttractionSpot = async(id) => {
+  const res = await getAttractionSpotApi(id);
   const detail = await res.json();
   return detail;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const detail = await getAttraction(id);
+  const detail = await getAttractionSpot(id);
   const carousel = document.querySelector('#carousel-detail > .carousel');
   const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const radioBookings = document.querySelectorAll('#form-booking input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
 
-  const initDetail = () => {
+  const render = () => {
     if(detail.data?.length > 0) {
       detail.data.forEach(({name, category, mrt, description, address, transport, images}) => {
         images.forEach((image, index) => {
@@ -66,9 +66,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const booking = async(e) => {
     // * 暫時預防去點到
     e.preventDefault();
+    window.location.href = '/booking';
   };
 
-  initDetail();
+  render();
   formBooking.addEventListener('submit', booking);
   new Carousel('carousel-detail').init();
 });
