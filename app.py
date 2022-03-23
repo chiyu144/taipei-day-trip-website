@@ -53,11 +53,11 @@ def thankyou():
 # API error handler
 @app.errorhandler(500)
 def internal_server_error(e):
-  return jsonify({'error': True, 'message': str(e)}), 500
+  return jsonify({'error': True, 'message': str(e.description)}), 500
 
 @app.errorhandler(400)
-def not_found_error(e):
-  return jsonify({'error': True, 'message': str(e)}), 400
+def bad_request_error(e):
+  return jsonify({'error': True, 'message': str(e.description)}), 400
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')

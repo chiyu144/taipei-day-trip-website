@@ -26,8 +26,7 @@ def api_attraction_spot(attraction_id):
     result = query_attraction_spot(attraction_id)
     result['images'] = result['images'].split(',')
     return jsonify({'data': [result]})
+  except TypeError as e:
+    abort(400, description=abort_msg(e, 'Attraction id is incorrect.'))
   except Exception as e:
-    if result is None:
-      abort(400, description='Parameter attraction id is incorrect.')
-    else:
-      abort(500, description=abort_msg(e))
+    abort(500, description=abort_msg(e))
