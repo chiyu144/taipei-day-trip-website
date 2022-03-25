@@ -6,10 +6,9 @@ let keyword = undefined;
 let isLoading = true;
 
 const getAttractions = async(page, keyword) => {
-  const res = await getAttractionsApi(page, keyword);
-  const attractions = await res.json();
-  nextPage = attractions.nextPage;
-  return attractions;
+  const data = await getAttractionsApi(page, keyword);
+  nextPage = data.nextPage;
+  return data;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {

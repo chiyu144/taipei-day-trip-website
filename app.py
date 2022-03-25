@@ -4,6 +4,7 @@ from mysql.connector import Error, pooling
 
 from models.attractions import bp_m_attractions
 from models.attraction_spot import bp_m_attraction_spot
+from models.user import bp_m_user
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -35,6 +36,8 @@ with app.app_context():
 app.config['ENV'] = config['App']['env']
 app.config['JSON_AS_ASCII'] = config['App'].getboolean('json_as_ascii')
 app.config['TEMPLATES_AUTO_RELOAD'] = config['App'].getboolean('templates_auto_reload')
+app.config['JWT_ALG'] = config['JWT']['alg']
+app.config['JWT_SECRET_KEY'] = config['JWT']['secret_key']
 
 # Pages
 @app.route('/')
@@ -53,14 +56,15 @@ def thankyou():
 # API error handler
 @app.errorhandler(500)
 def internal_server_error(e):
-  return jsonify({'error': True, 'message': str(e.description)}), 500
+  return jsonify({ 'error': True, 'message': str(e.description) }), 500
 
 @app.errorhandler(400)
 def bad_request_error(e):
-  return jsonify({'error': True, 'message': str(e.description)}), 400
+  return jsonify({ 'error': True, 'message': str(e.description) }), 400
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')
+app.register_blueprint(bp_m_user, url_prefix = '/api')
 
 if __name__ == '__main__':
   app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)

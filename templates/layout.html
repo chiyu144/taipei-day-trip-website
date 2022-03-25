@@ -26,14 +26,14 @@
   </nav>
   <main id="main">
     {% block body %}
-      // Dynamic Content.
+      <!-- Dynamic Content. -->
     {% endblock %}
   </main>
   <footer>COPYRIGHT © 2021 台北一日遊</footer>
   <script type="module" src="{{ url_for('static', filename='apis.js') }}"></script>
   <script type="module" src="{{ url_for('static', filename='utils.js') }}"></script>
     {% block script %}
-      // Page Script
+      <!-- Page Script -->
     {% endblock %}
 </body>
 </html>

@@ -5,9 +5,8 @@ let attractionUrl = new URL(window.location);
 let id = attractionUrl.pathname.split('/')[2];
 
 const getAttractionSpot = async(id) => {
-  const res = await getAttractionSpotApi(id);
-  const detail = await res.json();
-  return detail;
+  const data = await getAttractionSpotApi(id);
+  return data;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {

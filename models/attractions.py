@@ -34,6 +34,6 @@ def api_attractions():
     next_page = None if len(result) < page_unit else page + 1
     return jsonify({'nextPage': next_page, 'data': result})
   except TypeError as e:
-    abort(400, description=abort_msg(e, 'Parameter page type:int is required.'))
+    abort(400, description=abort_msg(e, 'Parameter: page (type: int) is required.'))
   except Exception as e:
     abort(500, description=abort_msg(e))

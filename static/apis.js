@@ -15,7 +15,9 @@ export const getAttractionsApi = async(page, keyword) => {
       method: 'GET',
       headers: apiHeaders,
     });
-    return res;
+    const data = await res.json();
+    if (res.ok) { return data; }
+    else { throw `${res.status} ${res.statusText}`; };
   } catch (err) {
     console.warn(err);
   }
@@ -28,7 +30,9 @@ export const getAttractionSpotApi = async(id) => {
       method: 'GET',
       headers: apiHeaders
     });
-    return res;
+    const data = await res.json();
+    if (res.ok) { return data; }
+    else { throw `${res.status} ${res.statusText}`; };
   } catch (err) {
     console.warn(err);
   }

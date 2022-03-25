@@ -2,7 +2,7 @@ import traceback, sys
 
 # 自訂的 API 錯誤訊息
 
-def abort_msg(e, custom_msg=None):
+def abort_msg(e, custom_msg=''):
   error_class = e.__class__.__name__
   detail = e.args[0]
   cl, exc, tb = sys.exc_info() # 錯誤完整資訊 Call Stack
