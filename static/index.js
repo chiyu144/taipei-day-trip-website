@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const footerIO = new IntersectionObserver(async(e) => {
-    if(e[0].isIntersecting && nextPage !== null && !isLoading && window.location.pathname === '/') {
+    if(e[0].isIntersecting && nextPage !== null && !isLoading) {
       isLoading = true;
       sentinel.classList.add('sentinel-attractions');
       sentinel.appendChild(wrapLoader);
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   render(attractions);
   footerIO.observe(footer);
   formSearchAttractions.addEventListener('submit', searchAttractions);
-  window.addEventListener('popstate', () => {
-    console.log('index popstate');
-  })
+  window.addEventListener('beforeunload', () => {
+    footerIO.unobserve(footer);
+  });
 });

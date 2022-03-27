@@ -63,21 +63,20 @@ nav {
   z-index: 9999;
   border-bottom: 1px solid var(--color-gray-300);
 }
-.nav-bar {
+#nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 0;
 }
-.nav-bar > div > a:first-child { margin-right: 15px; }
-#logo {
+#nav-bar > div > a { cursor: pointer; }
+#nav-bar > div > a:first-child { margin-right: 15px; }
+#nav-bar-logo {
   color: var(--color-cyan-800);
   font-weight: 700;
   font-size: var(--font-size-header);
 }
-#logo:hover {
-  color: var(--color-cyan-700);
-}
+#nav-bar-logo:hover { color: var(--color-cyan-700); }
 #main {
   flex: 1;
   height: auto;
@@ -94,10 +93,6 @@ footer {
   font-weight: 700;
   color: var(--color-white);
   background-color: var(--color-gray-700);
-}
-.overlay {
-  position: fixed;
-  top: 0; right: 0; bottom: 0; left: 0;
 }
 .sentinel {
   position: relative;
@@ -169,7 +164,7 @@ footer {
 
 @media screen and (max-width: 1200px) { 
   .container { max-width: 960px; }
-  .nav-bar {
+  #nav-bar {
     padding: 5px 10px;
   }
   .col.col-lg-1, .col.col-lg-2, .col.col-lg-3, .col.col-lg-4,
@@ -212,7 +207,7 @@ footer {
 }
 @media screen and (max-width: 480px) {
   .container { max-width: 100%; }
-  .nav-bar > div > a:first-child {
+  #nav-bar > div > a:first-child {
     margin-right: 5px;
   }
   .col.col-xs-1, .col.col-xs-2, .col.col-xs-3, .col.col-xs-4,

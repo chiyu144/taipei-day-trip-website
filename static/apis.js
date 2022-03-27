@@ -37,3 +37,18 @@ export const getAttractionSpotApi = async(id) => {
     console.warn(err);
   }
 };
+
+export const getUserApi = async() => {
+  try {
+    const apiUrl = new URL('/api/user', host);
+    const res = await fetch(apiUrl.toString(), {
+      method: 'GET',
+      headers: apiHeaders
+    });
+    const data = await res.json();
+    if (res.ok) { return data; }
+    else { throw `${res.status} ${res.statusText}`; };
+  } catch (err) {
+    console.warn(err);
+  }
+};
