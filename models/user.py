@@ -34,13 +34,14 @@ class Api_User(MethodView):
   def get(self):
     # api: 檢查會員登入狀態
     jwt_cookie = request.cookies.get('jwt')
-    try:
-      user_state = jwt.decode(jwt_cookie, current_app.config['JWT_SECRET_KEY'], algorithms = current_app.config['JWT_ALG'])
-      user_state.pop('exp')
-      return jsonify({ 'data': user_state })
-    except jwt.ExpiredSignatureError as e:
-      print(e)
-      return jsonify({ 'data': None })
+    if (jwt_cookie):
+      try:
+        user_state = jwt.decode(jwt_cookie, current_app.config['JWT_SECRET_KEY'], algorithms = current_app.config['JWT_ALG'])
+        user_state.pop('exp')
+        return jsonify({ 'data': user_state })
+      except jwt.ExpiredSignatureError as e:
+        return jsonify({ 'data': None, 'message': e })
+    return jsonify({ 'data': None })
 
   def post(self):
     # api: 會員註冊
