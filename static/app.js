@@ -36,6 +36,9 @@ const clearMsgAuth = msgAuth => {
   msgAuth.classList.contains('sentinel-auth') && msgAuth.classList.remove('sentinel-auth');
 };
 
+const triggerAuth = document.querySelector('#trigger-auth');
+await getUser(triggerAuth);
+
 window.addEventListener('load', async() => {
   const formAuth = document.querySelector('#form-auth');
   const titleAuth = formAuth.querySelector('div:first-child');
@@ -44,15 +47,12 @@ window.addEventListener('load', async() => {
   const buttonAuth = formAuth.querySelector('button');
   const msgToggleAuth = document.querySelector('#toggle-auth > span');
   const toggleAuth = document.querySelector('#toggle-auth > a');
-  const triggerAuth = document.querySelector('#trigger-auth');
-
-  await getUser(triggerAuth);
 
   const triggers = document.querySelectorAll('[data-modal]');
   triggers.forEach(trigger => {
     trigger.addEventListener('click', e => {
       e.preventDefault();
-      if (trigger.id === 'trigger-auth' && trigger.textContent === '登出系統') { return; }; 
+      if (trigger.id === 'trigger-auth' && (trigger.textContent === '登出系統' || '')) { return; }; 
       const modal = document.getElementById(trigger.dataset.modal);
       modal.classList.add('open-modal');
       const exits = modal.querySelectorAll('.exit-modal');
