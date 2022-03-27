@@ -36,7 +36,7 @@ const clearMsgAuth = msgAuth => {
   msgAuth.classList.contains('sentinel-auth') && msgAuth.classList.remove('sentinel-auth');
 };
 
-window.addEventListener('load', async() => {  
+window.addEventListener('load', async() => {
   const formAuth = document.querySelector('#form-auth');
   const titleAuth = formAuth.querySelector('div:first-child');
   const fieldUserName = document.querySelector('.field-user-name');
