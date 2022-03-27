@@ -52,20 +52,18 @@ window.addEventListener('load', async() => {
   triggers.forEach(trigger => {
     trigger.addEventListener('click', e => {
       e.preventDefault();
+      if (trigger.id === 'trigger-auth' && trigger.textContent === '登出系統') { return; }; 
       const modal = document.getElementById(trigger.dataset.modal);
-      if( modal.textContent === '登出系統' ) { return; }
-      else {
-        modal.classList.add('open-modal');
-        const exits = modal.querySelectorAll('.exit-modal');
-        exits.forEach(exit => {
-          exit.addEventListener('click', e => {
-            e.preventDefault();
-            modal.classList.remove('open-modal');
-            clearMsgAuth(msgAuth);
-            formAuth.reset();
-          });
+      modal.classList.add('open-modal');
+      const exits = modal.querySelectorAll('.exit-modal');
+      exits.forEach(exit => {
+        exit.addEventListener('click', e => {
+          e.preventDefault();
+          modal.classList.remove('open-modal');
+          clearMsgAuth(msgAuth);
+          formAuth.reset();
         });
-      };
+      });
     });
   });
 

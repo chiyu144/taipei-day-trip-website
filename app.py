@@ -17,7 +17,8 @@ def create_db_pool():
       port=int(config['Mysql']['port']),
       user=config['Mysql']['user'],
       password=config['Mysql']['password'],
-      database=config['Mysql']['database']
+      database=config['Mysql']['database'],
+      auth_plugin='mysql_native_password'
   )
 
 def db_cnx():
@@ -71,4 +72,4 @@ app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')
 app.register_blueprint(bp_m_user, url_prefix = '/api')
 
 if __name__ == '__main__':
-  app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000 if app.config['ENV'] == 'development' else 443, debug=True if app.config['ENV'] == 'development' else False)
+    app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)
