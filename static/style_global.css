@@ -15,6 +15,7 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-text-shadow: #aabbcc;
+  --color-error: #cc4b4b;
 }
 /* --- My custom CSS reset --- */
 *, *::before, *::after {

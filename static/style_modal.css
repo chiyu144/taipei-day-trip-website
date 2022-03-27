@@ -67,14 +67,25 @@
 #modal-auth  #form-auth input:focus {
   border: 1px solid var(--color-cyan-800);
 }
-.user-name-field {
+.field-user-name {
   height: 0;
   margin-bottom: 0;
   transition: height .2s ease;
 }
-.anime-user-name-field {
+.anime-field-user-name {
   height: 47px;
   margin-bottom: 10px;
+}
+.msg-auth {
+  color: var(--color-error);
+}
+.sentinel-auth {
+  height: 22px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+#toggle-auth {
+  text-align: center;
 }
 #modal-auth #toggle-auth > a {
   text-decoration: underline;

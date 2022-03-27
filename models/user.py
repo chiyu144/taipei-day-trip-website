@@ -40,7 +40,7 @@ class Api_User(MethodView):
         user_state.pop('exp')
         return jsonify({ 'data': user_state })
       except jwt.ExpiredSignatureError as e:
-        return jsonify({ 'data': None, 'message': e })
+        abort(401, description = abort_msg(e))
     return jsonify({ 'data': None })
 
   def post(self):
