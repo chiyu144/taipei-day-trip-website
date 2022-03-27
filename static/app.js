@@ -36,8 +36,6 @@ const clearMsgAuth = msgAuth => {
   msgAuth.classList.contains('sentinel-auth') && msgAuth.classList.remove('sentinel-auth');
 };
 
-const triggerAuth = document.querySelector('#trigger-auth');
-await getUser(triggerAuth);
 
 window.addEventListener('load', async() => {
   const formAuth = document.querySelector('#form-auth');
@@ -47,8 +45,11 @@ window.addEventListener('load', async() => {
   const buttonAuth = formAuth.querySelector('button');
   const msgToggleAuth = document.querySelector('#toggle-auth > span');
   const toggleAuth = document.querySelector('#toggle-auth > a');
-
+  const triggerAuth = document.querySelector('#trigger-auth');
   const triggers = document.querySelectorAll('[data-modal]');
+  
+  await getUser(triggerAuth);
+  
   triggers.forEach(trigger => {
     trigger.addEventListener('click', e => {
       e.preventDefault();
