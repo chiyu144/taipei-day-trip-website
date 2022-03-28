@@ -5,8 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>台北一日遊</title>
-  {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style_global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_modal.css') }}">
+  {% block head %}
+    <!-- Page CSS -->
   {% endblock %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,25 +17,56 @@
 <body>
   <nav role="navigation">
     <div class="container">
-      <div class="nav-bar">
-          <div id="logo"><a href="/">台北一日遊</a></div>
+      <div id="nav-bar">
+          <div id="nav-bar-logo"><a href="/">台北一日遊</a></div>
           <div>
             <a>預定行程</a>
-            <a>登入/註冊</a>
+            <a data-modal="modal-auth" id="trigger-auth"></a>
           </div>
       </div>
     </div>
   </nav>
   <main id="main">
     {% block body %}
-      // Dynamic Content.
+      <!-- Dynamic Content -->
     {% endblock %}
   </main>
   <footer>COPYRIGHT © 2021 台北一日遊</footer>
+  <div class="modal" id="modal-auth">
+    <div class="bg-modal exit-modal"></div>
+    <div class="container-modal">
+      <div class="decorate-line-modal"></div>
+      <form id="form-auth">
+        <div>登入會員帳號</div>
+        <div>
+          <label for="user-email">帳號</label>
+          <input type="text" id="user-email" name="user-email" placeholder="輸入電子信箱">
+        </div>
+        <div>
+          <label for="user-password">密碼</label>
+          <input type="password" id="user-password" name="user-password" placeholder="輸入密碼">
+        </div>
+        <div class="field-user-name">
+          <label for="user-name">姓名</label>
+          <input type="text" id="user-name" name="user-name" placeholder="輸入姓名">
+        </div>
+        <button type="submit" class="button-cyan">登入帳戶</button>
+        <div class="sentinel msg-auth"></div>
+        <div id="toggle-auth">
+          <span>還沒有帳戶？</span>
+          <a>點此註冊</a>
+        </div>
+      </form>
+      <div class="close-modal exit-modal">
+        <img src="/static/image/icon_close.png">
+      </div>
+    </div>
+  </div>
   <script type="module" src="{{ url_for('static', filename='apis.js') }}"></script>
   <script type="module" src="{{ url_for('static', filename='utils.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
     {% block script %}
-      // Page Script
+      <!-- Page Script -->
     {% endblock %}
 </body>
 </html>

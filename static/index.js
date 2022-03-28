@@ -6,10 +6,9 @@ let keyword = undefined;
 let isLoading = true;
 
 const getAttractions = async(page, keyword) => {
-  const res = await getAttractionsApi(page, keyword);
-  const attractions = await res.json();
-  nextPage = attractions.nextPage;
-  return attractions;
+  const data = await getAttractionsApi(page, keyword);
+  nextPage = data.nextPage;
+  return data;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -17,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const msgHint = document.querySelector('.msg-hint');
   const wrapLoader = document.querySelector('.wrap-center');
   const containerAttractions = document.querySelector('#container-attractions');
-  const sentinel = document.querySelector('.sentinel');
-  const formSearchAttraction = document.querySelector('#form-search-attraction');
+  const sentinel = document.querySelector('#container-attractions .sentinel');
+  const formSearchAttractions = document.querySelector('#form-search-attractions');
   const attractions = await getAttractions(nextPage, keyword);
   const footer = document.querySelector('footer');
 
@@ -69,10 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     isLoading = false;
   };
 
-  const searchAttractionId = async(e) => {
+  const searchAttractions = async(e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    keyword = !formData.get('search-attraction') ? undefined : formData.get('search-attraction');
+    keyword = !formData.get('search-attractions') ? undefined : formData.get('search-attractions');
     if(keyword) {
       isLoading = true;
       clearView(rowAttractions);
@@ -86,11 +85,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         msgHint.style.display = 'block';
       };
     };
-    document.querySelector('#search-attraction').value = '';
+    document.querySelector('#search-attractions').value = '';
   };
 
   const footerIO = new IntersectionObserver(async(e) => {
-    if(e[0].isIntersecting && nextPage !== null && !isLoading && window.location.pathname === '/') {
+    if(e[0].isIntersecting && nextPage !== null && !isLoading) {
       isLoading = true;
       sentinel.classList.add('sentinel-attractions');
       sentinel.appendChild(wrapLoader);
@@ -104,8 +103,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   render(attractions);
   footerIO.observe(footer);
-  formSearchAttraction.addEventListener('submit', searchAttractionId);
-  window.addEventListener('popstate', () => {
-    console.log('index popstate');
-  })
+  formSearchAttractions.addEventListener('submit', searchAttractions);
+  window.addEventListener('beforeunload', () => {
+    footerIO.unobserve(footer);
+  });
 });

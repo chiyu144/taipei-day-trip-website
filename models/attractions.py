@@ -28,13 +28,12 @@ def api_attractions():
     page_unit = 12
     page = request.args.get('page', type=int)
     keyword = request.args.get('keyword')
-    if page is None:
-      abort(400, description='Parameter page type:int is required.')
-    else:
-      result = query_attractions(page_unit, page, keyword)
-      for index, row in enumerate(result):
-        result[index]['images'] = row['images'].split(',')
-      next_page = None if len(result) < page_unit else page + 1
-      return jsonify({'nextPage': next_page, 'data': result})
+    result = query_attractions(page_unit, page, keyword)
+    for index, row in enumerate(result):
+      result[index]['images'] = row['images'].split(',')
+    next_page = None if len(result) < page_unit else page + 1
+    return jsonify({'nextPage': next_page, 'data': result})
+  except TypeError as e:
+    abort(400, description=abort_msg(e, 'Parameter: page (type: int) is required.'))
   except Exception as e:
     abort(500, description=abort_msg(e))

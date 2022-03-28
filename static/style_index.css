@@ -21,12 +21,12 @@
   text-shadow: 0px 0px 30px var(--color-text-shadow);
   margin-bottom: 25px;
 }
-#form-search-attraction {
+#form-search-attractions {
   height: 46px;
   display: flex;
 }
-#form-search-attraction > label { display: none;}
-#form-search-attraction > input {
+#form-search-attractions > label { display: none;}
+#form-search-attractions > input {
   height: 100%;
   width: 400px;
   border-radius: 5px 0 0 5px;
@@ -37,10 +37,10 @@
   outline: none;
   transition: border .2s ease;
 }
-#form-search-attraction > input:focus {
+#form-search-attractions > input:focus {
   border: 1px solid var(--color-cyan-800);
 }
-#form-search-attraction > button {
+#form-search-attractions > button {
   display: inline-block;
   height: 100%;
   width: 60px;
@@ -112,11 +112,11 @@
 }
 @media screen and (max-width: 1200px) {
   #hero { background-position: 425px bottom, center; }
-  #form-search-attraction > input { width: 320px; }
+  #form-search-attractions > input { width: 320px; }
 }
 @media screen and (max-width: 854px) {
   #hero { background-position: 265px bottom, center; }
-  #form-search-attraction > input { width: 320px; }
+  #form-search-attractions > input { width: 320px; }
 }
 @media screen and (max-width: 480px) {
   #hero { height: 280px; }
@@ -125,7 +125,7 @@
     background-size: 80%, 100%;
   }
   #hero > .container { padding: 65px 0 0 10px; }
-  #form-search-attraction > input { width: 230px; }
+  #form-search-attractions > input { width: 230px; }
   .attraction { height: 285px; }
   .wrap-thumbnail-attraction { height: 202px; }
 }
