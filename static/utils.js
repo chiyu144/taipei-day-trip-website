@@ -1,3 +1,5 @@
+import { userApi } from './apis.js'
+
 // * 實作 Skeleton 用
 // * 整個流程: fetch 資料 → loading spinner 畫面 → 資料回來等圖片載入中 → Skeleton 畫面 → 圖片載好 → 正常畫面)
 export const onImgLoaded = img => {
@@ -16,6 +18,11 @@ export const clearView = root => {
   while (root.firstChild) {
     root.removeChild(root.firstChild);
   };
+};
+
+export const checkUserState = async() => {
+  const userState = await userApi('GET');
+  return (!userState?.data || userState.error) ? false : true;
 };
 
 // * 自己研究出來的輪播

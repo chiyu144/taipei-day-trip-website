@@ -1,5 +1,5 @@
 import { getAttractionSpotApi } from './apis.js';
-import { onImgLoaded, Carousel } from './utils.js';
+import { onImgLoaded, checkUserState, Carousel } from './utils.js';
 
 let attractionUrl = new URL(window.location);
 let id = attractionUrl.pathname.split('/')[2];
@@ -63,9 +63,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
   const booking = async(e) => {
-    // * 暫時預防去點到
     e.preventDefault();
-    window.location.href = '/booking';
+    if (await checkUserState()) {
+      window.location.href = '/booking';
+    } else {
+      document.querySelector('#trigger-auth').click();
+    }
   };
 
   render();

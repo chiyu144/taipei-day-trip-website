@@ -1,12 +1,8 @@
 import { userApi } from './apis.js'
+import { checkUserState } from './utils.js'
 
 export const getUser = async(triggerAuth) => {
-  const userState = await userApi('GET');
-  if (!userState?.data || userState.error) {
-    triggerAuth.textContent = '登入/註冊';
-  } else {
-    triggerAuth.textContent = '登出系統';
-  }
+  triggerAuth.textContent = (await checkUserState()) ? '登出系統' : '登入/註冊';
 };
 export const postUser = async({ userEmail, userPassword, userName }) => {
   const res = await userApi('POST', {
@@ -38,6 +34,7 @@ const clearMsgAuth = msgAuth => {
 
 
 window.addEventListener('load', async() => {
+  const navBooking = document.querySelector('#nav-booking');
   const formAuth = document.querySelector('#form-auth');
   const titleAuth = formAuth.querySelector('div:first-child');
   const fieldUserName = document.querySelector('.field-user-name');
@@ -49,6 +46,15 @@ window.addEventListener('load', async() => {
   const triggers = document.querySelectorAll('[data-modal]');
   
   await getUser(triggerAuth);
+
+  navBooking.addEventListener('click', async(e) => {
+    e.preventDefault();
+    if(await checkUserState()) {
+      window.location.href = '/booking';
+    } else {
+      triggerAuth.click();
+    }
+  });
   
   triggers.forEach(trigger => {
     trigger.addEventListener('click', e => {
