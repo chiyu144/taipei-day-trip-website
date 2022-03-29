@@ -1,4 +1,4 @@
-import { getAttractionSpotApi } from './apis.js';
+import { getAttractionSpotApi, bookingApi } from './apis.js';
 import { onImgLoaded, checkUserState, Carousel } from './utils.js';
 
 let attractionUrl = new URL(window.location);
@@ -8,6 +8,10 @@ const getAttractionSpot = async(id) => {
   const data = await getAttractionSpotApi(id);
   return data;
 };
+const postBooking = async({ attractionId, date, time, price }) => {
+  const res = await bookingApi('POST', { attractionId, date, time, price });
+  return res;
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
   const detail = await getAttractionSpot(id);
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
   const detailInfos = document.querySelectorAll('.detail-info');
   const formBooking = document.querySelector('#form-booking');
+  const dateBooking = document.querySelector('#date-booking');
   const radioBookings = document.querySelectorAll('#form-booking input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
 
@@ -65,13 +70,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const booking = async(e) => {
     e.preventDefault();
     if (await checkUserState()) {
-      window.location.href = '/booking';
+      const res = await postBooking({
+        attractionId: detail.data[0].id,
+        // date: ,
+        // time: ,
+        price: parseInt(msgGuideFee.textContent),
+      });
+      if (res?.ok) { window.location.href = '/booking'; };
     } else {
       document.querySelector('#trigger-auth').click();
-    }
+    };
   };
 
   render();
+  const today = new Date().toLocaleString();
+  dateBooking.setAttribute('min', today);
   formBooking.addEventListener('submit', booking);
   new Carousel('carousel-detail').init();
 });

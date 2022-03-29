@@ -80,7 +80,7 @@ class Api_User(MethodView):
           }
           jwt_token = jwt.encode(jwt_payload, current_app.config['JWT_SECRET_KEY'], algorithm = current_app.config['JWT_ALG'])
           res = make_response(jsonify({ 'ok': True }))
-          res.set_cookie('jwt', value = jwt_token, samesite = 'Strict')
+          res.set_cookie('jwt', value = jwt_token, samesite = 'Strict', httponly = True)
           return res
         else:
           raise ValueError('登入失敗，帳號或密碼錯誤')
@@ -94,7 +94,7 @@ class Api_User(MethodView):
   def delete(self):
     # api: 會員登出
     res = make_response(jsonify({ 'ok': True }))
-    res.delete_cookie('jwt', path = '/', samesite = 'Strict')
+    res.delete_cookie('jwt', path = '/', samesite = 'Strict', httponly = True)
     return res
 
 bp_m_user.add_url_rule('/user', view_func=Api_User.as_view('api_user'))
