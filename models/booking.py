@@ -16,7 +16,9 @@ def valid_date(date):
   except ValueError:
     return False
 
-# 取得行程 (多筆 Booking 資料，但一個景點只能 Booking 一次，重複 Booking 相同景點會覆蓋為最新的那次)
+# 取得行程
+# 目前資料庫可存多筆 Booking 資料，但一個景點只能 Booking 一次，重複 Booking 相同景點會覆蓋為最新的那次
+# 但暫時只先撈一筆 (依更新時間，最新的一筆)，傳給前端 (因為還沒想好前端多筆的畫面 #)，之後再更新
 @with_cnx(need_commit = False)
 def query_booking(cursor, member_id):
   query_sql = '''
@@ -28,8 +30,18 @@ def query_booking(cursor, member_id):
     LIMIT 0, 1
   '''
   cursor.execute(query_sql, (member_id, ))
-  booking = cursor.fetchone()
-  return booking
+  columns = [col[0] for col in cursor.description]
+  bookings = cursor.fetchall()
+  output = []
+  for booking in bookings:
+    booking_dct = {}
+    attraction_dct = dict(zip((columns[0], columns[1], columns[2], columns[3]), (booking[0], booking[1], booking[2], booking[3])))
+    booking_dct['attraction'] = attraction_dct
+    booking_dct['date'] = booking[4]
+    booking_dct['time'] = booking[5]
+    booking_dct['price'] = booking[6]
+    output.append(booking_dct)
+  return output
   
 # 預定行程
 @with_cnx(need_commit = True)
@@ -49,8 +61,8 @@ def booking_schedule(cursor, member_id, attraction_id, date, time, price):
 
 # 刪除行程
 @with_cnx(need_commit= True)
-def booking_cancelation(cursor, member_id, attraction_id):
-  cursor.execute('DELETE FROM booking WHERE member_id = %s AND attraction_id = %s', (member_id, attraction_id))
+def booking_cancellation(cursor, member_id, attraction_id):
+  cursor.execute('DELETE FROM booking WHERE member_id = %s', (member_id, ))
 
 class Api_Booking(MethodView): 
   def get(self):
@@ -63,17 +75,9 @@ class Api_Booking(MethodView):
       else:
         booking = query_booking(user_state['result']['sub'])
         print(booking)
-        return jsonify({ 'data': [{
-          'attraction': {
-            'id': booking[0],
-            'name': booking[1],
-            'address': booking[2],
-            'image': booking[3] 
-          },
-          'date': booking[4],
-          'time': booking[5],
-          'price': booking[6]
-        }] })
+        if booking:
+          return jsonify({ 'data': booking })
+        else: return jsonify({ 'data': [] })
     except PermissionError as e:
       abort(403, description = abort_msg(e))
 
@@ -111,7 +115,7 @@ class Api_Booking(MethodView):
         raise PermissionError('取得行程資訊失敗，已登出，請重新登入')
       else:
         attraction_id = request.args.get('id', type = int)
-        booking_cancelation(user_state['result']['sub'], attraction_id)
+        booking_cancellation(user_state['result']['sub'], attraction_id)
         return jsonify({ 'ok': True })
     except Exception as e:
       abort(500, description = abort_msg(e))

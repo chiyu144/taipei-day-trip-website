@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const carousel = document.querySelector('#carousel-detail > .carousel');
   const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
-  const detailInfos = document.querySelectorAll('.detail-info');
+  const infoDetails = document.querySelectorAll('.info-detail');
   const formBooking = document.querySelector('#form-booking');
   const dateBooking = formBooking.querySelector('#date-booking');
   const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
@@ -46,16 +46,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           carousel.appendChild(slide);
           wrapIndicator.appendChild(indicatorButton);
         });
-        detailInfos[0].textContent = name;
-        detailInfos[1].textContent = `${category} at ${mrt}`;
-        detailInfos[2].textContent = description;
-        detailInfos[3].textContent = address;
-        detailInfos[4].textContent = transport;
+        infoDetails[0].textContent = name;
+        infoDetails[1].textContent = `${category} at ${mrt}`;
+        infoDetails[2].textContent = description;
+        infoDetails[3].textContent = address;
+        infoDetails[4].textContent = transport;
       });
       detailSkeletons.forEach(detailSkeleton => {
         detailSkeleton.style.display = 'none';
       });
-      detailInfos.forEach(detailInfo => {
+      infoDetails.forEach(detailInfo => {
         detailInfo.style.opacity = 1;
       });
     }

@@ -80,7 +80,7 @@ class Api_User(MethodView):
             'sub': valid_user[0],
             'sub_name': valid_user[1],
             'sub_email': user_email,
-            'exp': datetime.utcnow() + timedelta(minutes = 5)
+            'exp': datetime.utcnow() + timedelta(minutes = 60)
           }
           jwt_token = jwt.encode(jwt_payload, current_app.config['JWT_SECRET_KEY'], algorithm = current_app.config['JWT_ALG'])
           res = make_response(jsonify({ 'ok': True }))

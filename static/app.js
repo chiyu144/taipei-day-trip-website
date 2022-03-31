@@ -13,7 +13,15 @@ const clearMsgAuth = () => {
 };
 
 export const getUser = async(triggerAuth) => {
-  triggerAuth.textContent = (await checkUserState()) ? '登出系統' : '登入/註冊';
+  const member = await checkUserState();
+  if (member) {
+    const userState = await userApi('GET');
+    triggerAuth.textContent = '登出系統';
+    sessionStorage.setItem('member', JSON.stringify(userState.data));
+  } else {
+    triggerAuth.textContent = '登入/註冊';
+    sessionStorage.setItem('member', '');
+  }
 };
 export const postUser = async({ userEmail, userPassword, userName }) => {
   const res = await userApi('POST', {
