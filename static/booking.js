@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async() => {
   const bookingAddr = infoBookings[4].querySelector('span:last-of-type');
   const cancellation = document.querySelector('.cancellation-booking');
   const bookingPrice = document.querySelector('#price-booking > span');
-  const orderButton = document.querySelector('#button-order');
+  const orderForm = document.querySelector('#form-order');
   const loader = document.querySelector('.wrap-center');
   
   const render = () => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async() => {
   };
 
   render();
-  orderButton.addEventListener('submit', e => {
+  orderForm.addEventListener('submit', e => {
     e.preventDefault();
   })
 });
