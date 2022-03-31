@@ -4,6 +4,7 @@ from flask import current_app, Blueprint, request, abort, jsonify, make_response
 from flask.views import MethodView
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
+from utils.check_user_state import check_user_state
 
 bp_m_user = Blueprint('m_user', __name__)
 
@@ -28,20 +29,23 @@ def signup_user(cursor, new_user_name, new_user_email, new_user_password):
 @with_cnx(need_commit= False)
 def query_user(cursor, user_email, user_password):
   cursor.execute('SELECT id, name FROM member WHERE email = %s AND password = %s', (user_email, user_password))
-  return cursor.fetchone()
+  member = cursor.fetchone()
+  return member
 
 class Api_User(MethodView): 
   def get(self):
     # api: 檢查會員登入狀態
-    jwt_cookie = request.cookies.get('jwt')
-    if (jwt_cookie):
-      try:
-        user_state = jwt.decode(jwt_cookie, current_app.config['JWT_SECRET_KEY'], algorithms = current_app.config['JWT_ALG'])
-        user_state.pop('exp')
-        return jsonify({ 'data': user_state })
-      except jwt.ExpiredSignatureError as e:
-        abort(401, description = abort_msg(e))
-    return jsonify({ 'data': None })
+    try:
+      jwt_cookie = request.cookies.get('jwt')
+      user_state = check_user_state(jwt_cookie)
+      if user_state['error'] == 'expired':
+        raise PermissionError(user_state['message'])
+      elif user_state['error'] == 'none':
+        return jsonify({ 'data': None })
+      else:
+        return jsonify({ 'data': user_state['result'] })
+    except PermissionError as e:
+      abort(403, description = abort_msg(e))
 
   def post(self):
     # api: 會員註冊

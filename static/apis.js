@@ -50,9 +50,12 @@ export const userApi = async(method, bodyObj = undefined) => {
     console.warn(err);
   }
 };
-export const bookingApi = async(method, bodyObj = undefined) => {
+export const bookingApi = async(method, bodyObj = undefined, attractionId = undefined) => {
   try {
     const apiUrl = new URL('/api/booking', host);
+    if (attractionId) {
+      apiUrl.searchParams.append('id', attractionId)
+    }
     const res = await fetch(apiUrl.toString(), {
       method: `${method}`,
       headers: apiHeaders,

@@ -64,9 +64,9 @@ def internal_server_error(e):
 def bad_request_error(e):
   return jsonify({ 'error': True, 'message': str(e.description) }), 400
 
-@app.errorhandler(401)
-def unauthorized_error(e):
-  return jsonify({ 'error': True, 'message': str(e.description) }), 401
+@app.errorhandler(403)
+def access_denied_error(e):
+  return jsonify({ 'error': True, 'message': str(e.description) }), 403
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')

@@ -10,7 +10,7 @@ const getAttractionSpot = async(id) => {
 };
 const postBooking = async({ attractionId, date, time, price }) => {
   const res = await bookingApi('POST', { attractionId, date, time, price });
-  return res;
+  if (res?.ok) { window.location.href = '/booking'; };
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
   const detailInfos = document.querySelectorAll('.detail-info');
   const formBooking = document.querySelector('#form-booking');
-  const dateBooking = document.querySelector('#date-booking');
-  const radioBookings = document.querySelectorAll('#form-booking input[type="radio"]');
+  const dateBooking = formBooking.querySelector('#date-booking');
+  const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
 
   const render = () => {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     radioBookings.forEach(radio => {
       radio.addEventListener('change', () => {
         if(radio.checked){
-          msgGuideFee.textContent = radio.id === 'radio-booking-am' ? '2000' : '2500';
+          msgGuideFee.textContent = radio.id === 'morning' ? '2000' : '2500';
         }
       });
     });
@@ -70,20 +70,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const booking = async(e) => {
     e.preventDefault();
     if (await checkUserState()) {
-      const res = await postBooking({
+      await postBooking({
         attractionId: detail.data[0].id,
-        // date: ,
-        // time: ,
+        date: dateBooking.value,
+        time: formBooking.querySelector('input[name=radio-booking]:checked').id,
         price: parseInt(msgGuideFee.textContent),
       });
-      if (res?.ok) { window.location.href = '/booking'; };
     } else {
       document.querySelector('#trigger-auth').click();
     };
   };
 
   render();
-  const today = new Date().toLocaleString();
+  const today = new Date(new Date()).toISOString().split('T')[0];
   dateBooking.setAttribute('min', today);
   formBooking.addEventListener('submit', booking);
   new Carousel('carousel-detail').init();
