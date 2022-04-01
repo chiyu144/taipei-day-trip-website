@@ -1,5 +1,5 @@
-import { getAttractionSpotApi } from './apis.js';
-import { onImgLoaded, Carousel } from './utils.js';
+import { getAttractionSpotApi, bookingApi } from './apis.js';
+import { onImgLoaded, checkUserState, Carousel } from './utils.js';
 
 let attractionUrl = new URL(window.location);
 let id = attractionUrl.pathname.split('/')[2];
@@ -8,15 +8,20 @@ const getAttractionSpot = async(id) => {
   const data = await getAttractionSpotApi(id);
   return data;
 };
+const postBooking = async({ attractionId, date, time, price }) => {
+  const res = await bookingApi('POST', { attractionId, date, time, price });
+  if (res?.ok) { window.location.href = '/booking'; };
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
   const detail = await getAttractionSpot(id);
   const carousel = document.querySelector('#carousel-detail > .carousel');
   const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
   const detailSkeletons = document.querySelectorAll('.detail-skeleton');
-  const detailInfos = document.querySelectorAll('.detail-info');
+  const infoDetails = document.querySelectorAll('.info-detail');
   const formBooking = document.querySelector('#form-booking');
-  const radioBookings = document.querySelectorAll('#form-booking input[type="radio"]');
+  const dateBooking = formBooking.querySelector('#date-booking');
+  const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
 
   const render = () => {
@@ -41,34 +46,44 @@ document.addEventListener('DOMContentLoaded', async () => {
           carousel.appendChild(slide);
           wrapIndicator.appendChild(indicatorButton);
         });
-        detailInfos[0].textContent = name;
-        detailInfos[1].textContent = `${category} at ${mrt}`;
-        detailInfos[2].textContent = description;
-        detailInfos[3].textContent = address;
-        detailInfos[4].textContent = transport;
+        infoDetails[0].textContent = name;
+        infoDetails[1].textContent = `${category} at ${mrt}`;
+        infoDetails[2].textContent = description;
+        infoDetails[3].textContent = address;
+        infoDetails[4].textContent = transport;
       });
       detailSkeletons.forEach(detailSkeleton => {
         detailSkeleton.style.display = 'none';
       });
-      detailInfos.forEach(detailInfo => {
+      infoDetails.forEach(detailInfo => {
         detailInfo.style.opacity = 1;
       });
     }
     radioBookings.forEach(radio => {
       radio.addEventListener('change', () => {
         if(radio.checked){
-          msgGuideFee.textContent = radio.id === 'radio-booking-am' ? '2000' : '2500';
+          msgGuideFee.textContent = radio.id === 'morning' ? '2000' : '2500';
         }
       });
     });
   }
   const booking = async(e) => {
-    // * 暫時預防去點到
     e.preventDefault();
-    window.location.href = '/booking';
+    if (await checkUserState()) {
+      await postBooking({
+        attractionId: detail.data[0].id,
+        date: dateBooking.value,
+        time: formBooking.querySelector('input[name=radio-booking]:checked').id,
+        price: parseInt(msgGuideFee.textContent),
+      });
+    } else {
+      document.querySelector('#trigger-auth').click();
+    };
   };
 
   render();
+  const today = new Date(new Date()).toISOString().split('T')[0];
+  dateBooking.setAttribute('min', today);
   formBooking.addEventListener('submit', booking);
   new Carousel('carousel-detail').init();
 });

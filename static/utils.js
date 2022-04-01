@@ -1,7 +1,12 @@
+import { userApi } from './apis.js'
+
 // * 實作 Skeleton 用
 // * 整個流程: fetch 資料 → loading spinner 畫面 → 資料回來等圖片載入中 → Skeleton 畫面 → 圖片載好 → 正常畫面)
 export const onImgLoaded = img => {
   if (img.complete) {
+    if(img.classList.contains('skeleton')) {
+      img.classList.remove('skeleton');
+    }
     // * 圖片已被載入 (圖片無情瞬間載好，不需做事)
     return;
   } else {
@@ -17,6 +22,15 @@ export const clearView = root => {
     root.removeChild(root.firstChild);
   };
 };
+
+export const checkUserState = async() => {
+  const userState = await userApi('GET');
+  return (!userState?.data || userState.error) ? false : true;
+};
+
+export const ntdDisplay = (num = 0) => {
+  return `新台幣 ${Math.trunc(num)} 元`
+}
 
 // * 自己研究出來的輪播
 export class Carousel {

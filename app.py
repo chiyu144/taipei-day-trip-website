@@ -5,6 +5,7 @@ from mysql.connector import Error, pooling
 from models.attractions import bp_m_attractions
 from models.attraction_spot import bp_m_attraction_spot
 from models.user import bp_m_user
+from models.booking import bp_m_booking
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -63,13 +64,14 @@ def internal_server_error(e):
 def bad_request_error(e):
   return jsonify({ 'error': True, 'message': str(e.description) }), 400
 
-@app.errorhandler(401)
-def unauthorized_error(e):
-  return jsonify({ 'error': True, 'message': str(e.description) }), 401
+@app.errorhandler(403)
+def access_denied_error(e):
+  return jsonify({ 'error': True, 'message': str(e.description) }), 403
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')
 app.register_blueprint(bp_m_user, url_prefix = '/api')
+app.register_blueprint(bp_m_booking, url_prefix = '/api')
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)

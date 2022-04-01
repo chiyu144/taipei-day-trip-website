@@ -26,26 +26,26 @@
         <div class="col-md-12 col col-detail col-detail-top col-detail-right">
           <form id="form-booking">
             <div class="detail-skeleton skeleton"></div>
-            <div class="detail-info"></div>
+            <div class="info-detail"></div>
             <div class="detail-skeleton skeleton"></div>
-            <div class="detail-info"></div>
+            <div class="info-detail"></div>
             <div>
               <div class="subtitle-detail">訂閱導覽行程</div>
               <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
               <div>
                 <span class="subtitle-detail">選擇日期：</span>
-                <input type="date" name="date-booking" id="date-booking"/>
+                <input type="date" name="date-booking" id="date-booking" max="2099-12-31" required/>
                 <label for="date-booking">
                 </label>
               </div>
               <div>
                 <span class="subtitle-detail">選擇時間：</span>
-                <input type="radio" name="radio-booking" id="radio-booking-am" checked/>
-                <label for="radio-booking-am">
+                <input type="radio" name="radio-booking" id="morning" checked/>
+                <label for="morning">
                   上半天
                 </label>
-                <input type="radio" name="radio-booking" id="radio-booking-pm"/>
-                <label for="radio-booking-pm">
+                <input type="radio" name="radio-booking" id="afternoon"/>
+                <label for="afternoon">
                   下半天
                 </label>
               </div>
@@ -66,21 +66,21 @@
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="detail-skeleton skeleton"></div>
-          <div class="detail-info"></div>
+          <div class="info-detail"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">景點地址：</div>
           <div class="detail-skeleton skeleton"></div>
-          <div class="detail-info"></div>
+          <div class="info-detail"></div>
         </div>
       </div>
       <div class="row row-detail-bottom">
         <div class="col col-detail col-detail-bottom">
           <div class="subtitle-detail">交通方式：</div>
           <div class="detail-skeleton skeleton"></div>
-          <div class="detail-info"></div>
+          <div class="info-detail"></div>
         </div>
         <div class="spacer-detail"></div>
       </div>

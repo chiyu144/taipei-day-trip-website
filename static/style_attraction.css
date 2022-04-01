@@ -76,7 +76,7 @@
 .grid-detail-bottom .detail-skeleton {
   width: 100%;
 }
-.detail-info {
+.info-detail {
   opacity: 0;
   transition: opacity .2s ease-in;
 }

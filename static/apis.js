@@ -3,6 +3,7 @@ const apiHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 };
+
 export const getAttractionsApi = async(page, keyword) => {
   try {
     const apiUrl = new URL('/api/attractions', host);
@@ -38,6 +39,23 @@ export const getAttractionSpotApi = async(id) => {
 export const userApi = async(method, bodyObj = undefined) => {
   try {
     const apiUrl = new URL('/api/user', host);
+    const res = await fetch(apiUrl.toString(), {
+      method: `${method}`,
+      headers: apiHeaders,
+      body: bodyObj ? JSON.stringify(bodyObj) : undefined
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.warn(err);
+  }
+};
+export const bookingApi = async(method, bodyObj = undefined, attractionId = undefined) => {
+  try {
+    const apiUrl = new URL('/api/booking', host);
+    if (attractionId) {
+      apiUrl.searchParams.append('id', attractionId)
+    }
     const res = await fetch(apiUrl.toString(), {
       method: `${method}`,
       headers: apiHeaders,

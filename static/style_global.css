@@ -72,12 +72,12 @@ nav {
 }
 #nav-bar > div > a { cursor: pointer; }
 #nav-bar > div > a:first-child { margin-right: 15px; }
-#nav-bar-logo {
+#nav-logo {
   color: var(--color-cyan-800);
   font-weight: 700;
   font-size: var(--font-size-header);
 }
-#nav-bar-logo:hover { color: var(--color-cyan-700); }
+#nav-logo:hover { color: var(--color-cyan-700); }
 #main {
   flex: 1;
   height: auto;

@@ -79,12 +79,16 @@
   height: 160px;
   overflow: hidden;
   cursor: pointer;
+  transition: filter .3s ease-in-out;
+}
+.wrap-thumbnail-attraction:hover {
+  filter: brightness(0.75);
 }
 .thumbnail-attraction {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .2s ease-in;
+  transition: transform .6s ease-in-out;
 }
 .thumbnail-attraction:hover {
   transform: scale(1.2);
