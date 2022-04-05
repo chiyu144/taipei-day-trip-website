@@ -151,7 +151,8 @@ footer {
   background-color: var(--color-gray-300);
 }
 @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
-.run-fade-in { animation: fade-in .2s ease-in; }
+.run-fade-in-index { animation: fade-in .15s ease-in; }
+.run-fade-in-booking { animation: fade-in .2s ease-in; }
 /* --- My Custom Grid System --- */
 .container {
   width: 100%;
