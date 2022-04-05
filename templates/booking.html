@@ -4,96 +4,57 @@
 {% endblock %}
 {% block body %}
   <div id="container-booking" class="container">
-    <div class="wrap-center">
-      <div class="loader"></div>
-    </div>
-    <div name="no-booking">
-      <div class="section-booking">
-        <div class="title-booking">您好，<span class="member-name"></span>，待預定的行程如下</div>
-        <div class="msg-hint msg-no-booking">目前沒有任何待預定的行程</div>
+    <div class="section-booking">
+      <div class="title-booking">您好，<span class="member-name"></span>，待預定的行程如下</div>
+      <div class="grid grid-booking">
+        <div class="msg-hint msg-no-booking msg-no-booking-hide">目前沒有任何待預定的行程</div>
+        <div class="wrap-center">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
-    <div name="has-booking">
+    <form id="form-order">
+      <hr/>
       <div class="section-booking">
-        <div class="title-booking">您好，<span class="member-name"></span>，待預定的行程如下</div>
-        <div class="grid grid-booking">
-          <div class="row">
-            <div class="col-md-12 col col-booking col-booking-left">
-              <div class="wrap-thumbnail-booking">
-                <img class="thumbnail-booking skeleton">
-              </div>
-            </div>
-            <div class="col-md-12 col col-booking col-booking-right">
-              <div class="info-booking">
-                <span>台北一日遊：</span>
-                <span></span>
-              </div>
-              <div class="info-booking">
-                <span>日期：</span>
-                <span></span>
-              </div>
-              <div class="info-booking">
-                <span>時間：</span>
-                <span></span>
-              </div>
-              <div class="info-booking">
-                <span>費用：</span>
-                <span></span>
-              </div>
-              <div class="info-booking">
-                <span>地點：</span>
-                <span></span>
-              </div>
-              <div class="cancellation-booking">
-                <img src="/static/image/icon_delete.png">
-              </div>
-            </div>
-          </div>
+        <div class="title-booking">您的連絡資訊</div>
+        <div>
+          <label>聯絡姓名：</label>
+          <input type="text">
+        </div>
+        <div>
+          <label>聯絡信箱：</label>
+          <input type="text">
+        </div>
+        <div>
+          <label>手機號碼：</label>
+          <input type="text">
+        </div>
+        <div id="msg-order">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
+      </div>
+      <hr/>
+      <div class="section-booking">
+        <div class="title-booking">信用卡付款資訊</div>
+        <div>
+          <label>卡片號碼：</label>
+          <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" placeholder="**** **** **** ****">
+        </div>
+        <div>
+          <label>過期時間：</label>
+          <input type="text" maxlength="4" placeholder="MM / YY">
+        </div>
+        <div>
+          <label>驗證密碼：</label>
+          <input type="text" maxlength="3" placeholder="CVV">
         </div>
       </div>
       <hr/>
-      <form id="form-order">
-        <div class="section-booking">
-          <div class="title-booking">您的連絡資訊</div>
-          <div>
-            <label>聯絡姓名：</label>
-            <input type="text">
-          </div>
-          <div>
-            <label>聯絡信箱：</label>
-            <input type="text">
-          </div>
-          <div>
-            <label>手機號碼：</label>
-            <input type="text">
-          </div>
-          <div id="msg-order">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
+      <div class="section-booking">
+        <div id="price-booking">
+          總價：<span></span>
         </div>
-        <hr/>
-        <div class="section-booking">
-          <div class="title-booking">信用卡付款資訊</div>
-          <div>
-            <label>卡片號碼：</label>
-            <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" placeholder="**** **** **** ****">
-          </div>
-          <div>
-            <label>過期時間：</label>
-            <input type="text" maxlength="4" placeholder="MM / YY">
-          </div>
-          <div>
-            <label>驗證密碼：</label>
-            <input type="text" maxlength="3" placeholder="CVV">
-          </div>
-        </div>
-        <hr/>
-        <div class="section-booking">
-          <div id="price-booking">
-            總價：<span></span>
-          </div>
-          <button type="submit" class="button-cyan" id="button-order">確認訂購並付款</button>
-        </div>
-      </form>
-    </div>
+        <button type="submit" class="button-cyan" id="button-order">確認訂購並付款</button>
+      </div>
+    </form>
   </div>
 {% endblock %}
 {% block script %}

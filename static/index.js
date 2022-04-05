@@ -1,5 +1,5 @@
 import { getAttractionsApi } from './apis.js';
-import { onImgLoaded, clearView } from './utils.js';
+import { onImgLoaded, clearView, animateArrayItems } from './utils.js';
 
 let nextPage = 0;
 let keyword = undefined;
@@ -27,9 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     attractions.data.forEach(({ id, name, category, mrt, images }, index) => {
       const attraction = document.createElement('div');
       attraction.classList.add('attraction', 'col-xs-12', 'col-md-6', 'col-lg-4', 'col-3', 'col');
-      if(index === attractions.data.length - 1) {
-        attraction.style.marginRight = 'auto';
-      } 
+      if(index === attractions.data.length - 1) { attraction.style.marginRight = 'auto'; };
+      if(index === 0) { attraction.classList.add('run-fade-in'); };
       const link = document.createElement('a');
       link.classList.add('link-attraction');
       link.href = `./attraction/${id}`;
@@ -101,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }, { threshold: [0.98] });
 
+  animateArrayItems(rowAttractions, 'fade-in', 'run-fade-in');
   render(attractions);
   footerIO.observe(footer);
   formSearchAttractions.addEventListener('submit', searchAttractions);

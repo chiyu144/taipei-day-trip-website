@@ -12,14 +12,17 @@ const clearMsgAuth = () => {
   msgAuth.classList.contains('sentinel-auth') && msgAuth.classList.remove('sentinel-auth');
 };
 
-export const getUser = async(triggerAuth) => {
+export const getUser = async(triggerAuth, bookingNum) => {
   const member = await checkUserState();
   if (member) {
     const userState = await userApi('GET');
     triggerAuth.textContent = '登出系統';
+    bookingNum.textContent = userState.data.booking_num;
+    bookingNum.style.visibility = 'visible';
     sessionStorage.setItem('member', JSON.stringify(userState.data));
   } else {
     triggerAuth.textContent = '登入/註冊';
+    bookingNum.style.visibility = 'hidden';
     sessionStorage.setItem('member', '');
   }
 };
@@ -56,8 +59,9 @@ window.addEventListener('load', async() => {
   const toggleAuth = document.querySelector('#toggle-auth > a');
   const triggerAuth = document.querySelector('#trigger-auth');
   const triggers = document.querySelectorAll('[data-modal]');
+  const bookingNum = document.querySelector('#nav-booking-num');
   
-  await getUser(triggerAuth);
+  await getUser(triggerAuth, bookingNum);
 
   navBooking.addEventListener('click', async(e) => {
     e.preventDefault();

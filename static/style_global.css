@@ -5,6 +5,7 @@
   --font-size-lg: 24px;
   --font-size-slogan: 28px;
   --font-size-header: 30px;
+  --font-size-count: 12px;
   --color-cyan-800: #448899;
   --color-cyan-700: #66aabb;
   --color-cyan-100: #aaddee;
@@ -70,8 +71,33 @@ nav {
   align-items: center;
   padding: 5px 0;
 }
-#nav-bar > div > a { cursor: pointer; }
-#nav-bar > div > a:first-child { margin-right: 15px; }
+#nav-bar > div > a {
+  cursor: pointer;
+  transition: color .2s ease;
+  display: inline-block;
+}
+#trigger-auth { min-width: 64px; }
+#nav-bar > div > a:hover { color: var(--color-cyan-700); }
+#nav-booking {
+  margin-right: 20px;
+  position: relative;
+}
+@keyframes scale { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+#nav-booking-num {
+  border-radius: 50%;
+  background-color: var(--color-cyan-800);
+  color: var(--color-white);
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  bottom: -4px; right: -14px;
+  border: 1px solid var(--color-cyan-100);
+  text-align: center;
+  line-height: 1.2;
+  font-size: var(--font-size-count);
+  animation: scale .3s ease;
+  visibility: hidden;
+}
 #nav-logo {
   color: var(--color-cyan-800);
   font-weight: 700;
@@ -106,6 +132,7 @@ footer {
   transform: translate(-50%, -50%);
 }
 .msg-hint { padding: 0 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .loader {
   width: 50px;
   height: 50px;
@@ -114,7 +141,7 @@ footer {
   border-top-color: var(--color-white);
   animation: spin 1s ease-in-out infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shimmer { 100% { -webkit-mask-position:left } }
 .skeleton {
   color: var(--color-gray-800);
   display: inline-block;
@@ -123,7 +150,8 @@ footer {
   animation: shimmer 1s infinite;
   background-color: var(--color-gray-300);
 }
-@keyframes shimmer { 100% { -webkit-mask-position:left } }
+@keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+.run-fade-in { animation: fade-in .2s ease-in; }
 /* --- My Custom Grid System --- */
 .container {
   width: 100%;

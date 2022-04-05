@@ -28,8 +28,25 @@ export const checkUserState = async() => {
   return (!userState?.data || userState.error) ? false : true;
 };
 
+export const checkBookingNum = async() => {
+  const userState = await userApi('GET');
+  return (!userState?.data || userState.error) ? 0 : userState.data.booking_num;
+};
+
+export const animateArrayItems = (container, animationName, className) => {
+  container.addEventListener('animationend', e => {
+    if (e.animationName === animationName) {
+      e.target.classList.remove(`${className}`);
+      e.target.style.opacity = 1;
+      if (e.target.nextElementSibling) {
+        e.target.nextElementSibling.classList.add(`${className}`);
+      }
+    }
+  });
+}
+
 export const ntdDisplay = (num = 0) => {
-  return `新台幣 ${Math.trunc(num)} 元`
+  return `新台幣 ${num} 元`
 }
 
 // * 自己研究出來的輪播
