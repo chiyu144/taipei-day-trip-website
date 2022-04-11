@@ -23,14 +23,41 @@ export const clearView = root => {
   };
 };
 
+export const clearInputInvalidStyle = invalidElements => {
+  // * invalidElements 必須是個 Array
+  invalidElements.forEach(invalidElement => {
+    invalidElement.classList.remove('input-invalid');
+    invalidElement.nextElementSibling.classList.remove('input-icon-invalid');
+  });
+}
+
 export const checkUserState = async() => {
   const userState = await userApi('GET');
-  return (!userState?.data || userState.error) ? false : true;
+  return (!userState?.data || userState.error) ? false : userState.data;
 };
 
 export const checkBookingNum = async() => {
   const userState = await userApi('GET');
   return (!userState?.data || userState.error) ? 0 : userState.data.booking_num;
+};
+
+export const checkClassExist = (element, className) => {
+  return element.classList.contains(`${className}`) ? true : false;
+};
+
+export const inputValidation = (type, inputElement, value) => {
+  // * type : 要驗證哪種格式，分別是 'email'、'password'、'phone'
+  const regex = type === 'email' ? new RegExp(/\S+@\S+\.\S+/) : type === 'password' ? new RegExp() : new RegExp();
+  const inputIcon = inputElement.nextElementSibling;
+  if (value === '' || !regex.test(value)) {
+    !checkClassExist(inputIcon, 'input-icon-invalid') && inputIcon.classList.add('input-icon-invalid');
+    !checkClassExist(inputElement, 'input-invalid') && inputElement.classList.add('input-invalid');
+    return false;
+  } else {
+    checkClassExist(inputIcon, 'input-icon-invalid') && inputIcon.classList.remove('input-icon-invalid');
+    checkClassExist(inputElement, 'input-invalid') && inputElement.classList.remove('input-invalid');
+    return true;
+  }
 };
 
 export const animateArrayItems = (container, animationName, className) => {
