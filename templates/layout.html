@@ -41,15 +41,18 @@
       <div class="decorate-line-modal"></div>
       <form id="form-auth">
         <div>登入會員帳號</div>
-        <div>
+        <div class="field">
           <label for="user-email">帳號</label>
           <input type="text" id="user-email" name="user-email" placeholder="輸入電子信箱">
+          <div class="input-icon">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
-        <div>
+        <div class="field">
           <label for="user-password">密碼</label>
           <input type="password" id="user-password" name="user-password" placeholder="輸入密碼">
         </div>
-        <div class="field-user-name">
+        <div class="field field-user-name">
           <label for="user-name">姓名</label>
           <input type="text" id="user-name" name="user-name" placeholder="輸入姓名">
         </div>
@@ -60,6 +63,16 @@
           <a>點此註冊</a>
         </div>
       </form>
+      <div class="close-modal exit-modal">
+        <img src="/static/image/icon_close.png">
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="modal-msg">
+    <div class="bg-modal exit-modal"></div>
+    <div class="container-modal">
+      <div class="decorate-line-modal"></div>
+      <p>Test</p>
       <div class="close-modal exit-modal">
         <img src="/static/image/icon_close.png">
       </div>
