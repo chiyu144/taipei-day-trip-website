@@ -18,33 +18,33 @@
       <div class="section-booking">
         <div class="title-booking">您的連絡資訊</div>
         <div>
-          <label>聯絡姓名：</label>
-          <input type="text">
+          <label for="buyer-name">聯絡姓名：</label>
+          <input type="text" id="buyer-name" name="buyer-name">
         </div>
         <div>
-          <label>聯絡信箱：</label>
-          <input type="text">
+          <label for="buyer-email">聯絡信箱：</label>
+          <input type="text" id="buyer-email" name="buyer-email">
         </div>
         <div>
-          <label>手機號碼：</label>
-          <input type="text">
+          <label for="buyer-phone">手機號碼：</label>
+          <input type="text" id="buyer-phone" name="buyer-phone">
         </div>
         <div id="msg-order">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
       </div>
       <hr/>
       <div class="section-booking">
         <div class="title-booking">信用卡付款資訊</div>
-        <div>
-          <label>卡片號碼：</label>
-          <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" placeholder="**** **** **** ****">
+        <div class="row row-tappay">
+          <div>卡片號碼：</div>
+          <div class="tpfield" id="card-number"></div>
         </div>
-        <div>
-          <label>過期時間：</label>
-          <input type="text" maxlength="4" placeholder="MM / YY">
+        <div class="row row-tappay">
+          <div>過期時間：</div>
+          <div class="tpfield" id="card-expiration-date"></div>
         </div>
-        <div>
-          <label>驗證密碼：</label>
-          <input type="text" maxlength="3" placeholder="CVV">
+        <div class="row row-tappay">
+          <div>驗證密碼：</div>
+          <div class="tpfield" id="card-ccv"></div>
         </div>
       </div>
       <hr/>
@@ -53,10 +53,16 @@
           總價：<span></span>
         </div>
         <button type="submit" class="button-cyan" id="button-order">確認訂購並付款</button>
+        <a data-modal="modal-msg" class="trigger-msg"></a>
       </div>
     </form>
   </div>
 {% endblock %}
 {% block script %}
   <script type="module" src="{{ url_for('static', filename='booking.js') }}"></script>
+  <script src="https://js.tappaysdk.com/tpdirect/v5.8.0"></script>
+  <script type="module" src="{{ url_for('static', filename='tappay.js') }}"></script>
+  <script>
+    TPDirect.setupSDK('{{ tappayAppId }}', '{{ tappayAppKey }}', 'sandbox')
+  </script>
 {% endblock %}

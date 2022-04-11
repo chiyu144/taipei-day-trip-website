@@ -16,7 +16,7 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-text-shadow: #aabbcc;
-  --color-error: #cc4b4b;
+  --color-error: #e72727;
 }
 /* --- My custom CSS reset --- */
 *, *::before, *::after {
@@ -77,6 +77,7 @@ nav {
   display: inline-block;
 }
 #trigger-auth { min-width: 64px; }
+.trigger-msg { display: none; }
 #nav-bar > div > a:hover { color: var(--color-cyan-700); }
 #nav-booking {
   margin-right: 20px;
@@ -153,6 +154,21 @@ footer {
 @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
 .run-fade-in-index { animation: fade-in .15s ease-in; }
 .run-fade-in-booking { animation: fade-in .2s ease-in; }
+.tpfield {
+  height: 38px;
+  width: 220px;
+  border: 1px solid;
+  border-color: var(--color-gray-300);
+  padding: 6px 10px;
+  border-radius: 5px;
+  transition: border-color .2s ease;
+  outline: 0;
+}
+.tappay-field-focus {
+  border-color: var(--color-cyan-800);
+}
+.field { position: relative; }
+
 /* --- My Custom Grid System --- */
 .container {
   width: 100%;

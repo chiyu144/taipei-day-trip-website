@@ -40,6 +40,10 @@ app.config['JSON_AS_ASCII'] = config['App'].getboolean('json_as_ascii')
 app.config['TEMPLATES_AUTO_RELOAD'] = config['App'].getboolean('templates_auto_reload')
 app.config['JWT_ALG'] = config['JWT']['alg']
 app.config['JWT_SECRET_KEY'] = config['JWT']['secret_key']
+app.config['TAPPAY_APP_ID'] = config['TapPay']['app_id']
+app.config['TAPPAY_APP_KEY'] = config['TapPay']['app_key']
+app.jinja_env.globals.update(tappayAppId = app.config['TAPPAY_APP_ID'])
+app.jinja_env.globals.update(tappayAppKey = app.config['TAPPAY_APP_KEY'])
 
 # Pages
 @app.route('/')
