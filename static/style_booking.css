@@ -16,6 +16,7 @@
   max-width: 980px;
 }
 .title-booking { margin-bottom: 35px; }
+#form-order .title-booking { margin-bottom: 24px; }
 .grid-booking {
   padding: 0;
   min-height: 200px;
@@ -30,6 +31,12 @@
 }
 .grid-booking .info-booking:nth-child(2) { margin-top: 20px; }
 .row-booking { opacity: 0; }
+.row-tappay {
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  gap: 3px
+}
 .col-booking { margin: 0 15px 40px 15px; }
 .col-booking-right { position: relative; }
 .col-booking-left { flex-grow: 0; }
