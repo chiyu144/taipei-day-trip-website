@@ -168,7 +168,23 @@ footer {
   border-color: var(--color-cyan-800);
 }
 .field { position: relative; }
-
+.input-icon {
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 15px);
+  width: 22px; height: 22px;
+  transform: scale(0);
+  transition: transform .1s ease-in;
+  border-radius: 50%;
+  background-color: var(--color-white);
+}
+.input-icon > img {
+  filter: invert(42%) sepia(97%) saturate(5375%) hue-rotate(352deg) brightness(86%) contrast(109%);
+}
+.input-icon-invalid { transform: scale(1); }
+.input-invalid {
+  border-color: var(--color-error) !important;
+}
 /* --- My Custom Grid System --- */
 .container {
   width: 100%;
