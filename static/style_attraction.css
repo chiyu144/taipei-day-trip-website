@@ -97,6 +97,20 @@
   outline: none;
   cursor: pointer;
   transition: border .2s ease;
+  background-color: var(--color-white);
+  position: relative;
+}
+#date-booking::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  width: 100%; height: auto;
+  color: transparent;
+  background-image: url('/static/image/icon_calendar.png');
+  background-position: right 10px center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }
 #date-booking:focus {
   border: 1px solid var(--color-cyan-800);
