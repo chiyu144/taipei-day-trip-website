@@ -1,3 +1,6 @@
+
+import { checkClassExist } from './utils.js'
+
 export const tappaySetup = () => {
   let fields = {
     number: {
@@ -24,8 +27,8 @@ export const tappaySetup = () => {
       // 'input.expiration-date': {  },
       // 'input.card-number': {  },
       // ':focus': {  },
-      '.valid': { 'color': '#448899' },
-      '.invalid': { 'color': '#cc4b4b' },
+      // '.valid': { },
+      '.invalid': { 'color': '#e72727' },
       // '@media screen and (max-width: 480px)': {
       //   'input': {  }
       // }
@@ -33,39 +36,41 @@ export const tappaySetup = () => {
   });
 };
 
-export const tappayValidation = (tappayFields, submitButton) => {
+export const tappayValidation = tappayFields => {
+  const inputIcons = [
+    tappayFields[0].nextElementSibling,
+    tappayFields[1].nextElementSibling,
+    tappayFields[2].nextElementSibling
+  ];
   TPDirect.card.onUpdate(function (update) {
-    if (update.canGetPrime) {
-      submitButton.removeAttribute('disabled');
-    } else {
-      submitButton.setAttribute('disabled', true);
-    };
+    // if (update.canGetPrime) { } else {}
   
-    // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
+    // * cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
     // if (update.cardType === 'visa') {  }
   
+    // * 2: invalid, 1: normal, 0: success
     if (update.status.number === 2) {
-      tappayFields[0].classList.add('input-invalid');
-    } else if (update.status.number === 0) {
-      tappayFields[0].classList.remove('input-invalid');
+      !checkClassExist(inputIcons[0], 'input-icon-invalid') && inputIcons[0].classList.add('input-icon-invalid');
+      !checkClassExist(tappayFields[0], 'input-invalid') && tappayFields[0].classList.add('input-invalid');
     } else {
-      tappayFields[0].classList.remove('input-invalid');
+      checkClassExist(inputIcons[0], 'input-icon-invalid') && inputIcons[0].classList.remove('input-icon-invalid');
+      checkClassExist(tappayFields[0], 'input-invalid') && tappayFields[0].classList.remove('input-invalid');
     };
   
     if (update.status.expiry === 2) {
-      tappayFields[1].classList.add('input-invalid');
-    } else if (update.status.expiry === 0) {
-      tappayFields[1].classList.remove('input-invalid');
+      !checkClassExist(inputIcons[1], 'input-icon-invalid') && inputIcons[1].classList.add('input-icon-invalid');
+      !checkClassExist(tappayFields[1], 'input-invalid') && tappayFields[1].classList.add('input-invalid');
     } else {
-      tappayFields[1].classList.remove('input-invalid');
+      checkClassExist(inputIcons[1], 'input-icon-invalid') && inputIcons[1].classList.remove('input-icon-invalid');
+      checkClassExist(tappayFields[1], 'input-invalid') && tappayFields[1].classList.remove('input-invalid');
     };
   
     if (update.status.ccv === 2) {
-      tappayFields[2].classList.add('input-invalid');
-    } else if (update.status.ccv === 0) {
-      tappayFields[2].classList.remove('input-invalid');
+      !checkClassExist(tappayFields[2], 'input-invalid') && tappayFields[2].classList.add('input-invalid');
+      !checkClassExist(inputIcons[2], 'input-icon-invalid') && inputIcons[2].classList.add('input-icon-invalid');
     } else {
-      tappayFields[2].classList.remove('input-invalid');
+      checkClassExist(inputIcons[2], 'input-icon-invalid') && inputIcons[2].classList.remove('input-icon-invalid');
+      checkClassExist(tappayFields[2], 'input-invalid') && tappayFields[2].classList.remove('input-invalid');
     };
   });
 };
