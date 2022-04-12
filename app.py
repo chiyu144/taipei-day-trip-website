@@ -6,6 +6,8 @@ from models.attractions import bp_m_attractions
 from models.attraction_spot import bp_m_attraction_spot
 from models.user import bp_m_user
 from models.booking import bp_m_booking
+from models.orders import bp_m_orders
+from models.order_detail import bp_m_order_detail
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -76,6 +78,8 @@ app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')
 app.register_blueprint(bp_m_user, url_prefix = '/api')
 app.register_blueprint(bp_m_booking, url_prefix = '/api')
+app.register_blueprint(bp_m_orders, url_prefix = '/api')
+app.register_blueprint(bp_m_order_detail, url_prefix = '/api')
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1' if app.config['ENV'] == 'development' else '0.0.0.0', port=3000, debug=True if app.config['ENV'] == 'development' else False)
