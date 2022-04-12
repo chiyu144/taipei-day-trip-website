@@ -1,5 +1,7 @@
 import { userApi } from './apis.js'
-import { checkUserState, inputValidation, checkClassExist, clearInputInvalidStyle } from './utils.js'
+import {
+  checkUserState, inputValidation, checkClassExist, clearInputInvalidAll,
+  addInputInvalidAll } from './utils.js'
 
 let isLogin = false;
 
@@ -30,7 +32,7 @@ export const getUser = async(authModalTrigger, bookingNum) => {
     isLogin = false;
   }
 };
-export const postUser = async({ userEmail, userPassword, userName }, emailInput, passwordInput, nameInput) => {
+export const postUser = async({ userEmail, userPassword, userName }, inputElements) => {
   const res = await userApi('POST', {
     name: userName,
     email: userEmail,
@@ -39,15 +41,10 @@ export const postUser = async({ userEmail, userPassword, userName }, emailInput,
   if (res?.ok) { showAuthMsg('註冊成功，請重新登入'); };
   if (res?.error) {
     showAuthMsg(res.message);
-    emailInput.classList.add('input-invalid');
-    emailInput.nextElementSibling.classList.add('input-icon-invalid');
-    passwordInput.classList.add('input-invalid');
-    passwordInput.nextElementSibling.classList.add('input-icon-invalid');
-    nameInput.classList.add('input-invalid');
-    nameInput.nextElementSibling.classList.add('input-icon-invalid');
+    addInputInvalidAll(inputElements);
   }
 };
-export const patchUser = async({ userEmail, userPassword }, emailInput, passwordInput) => {
+export const patchUser = async({ userEmail, userPassword }, inputElements) => {
   const res = await userApi('PATCH', {
     email: userEmail,
     password: userPassword
@@ -55,10 +52,7 @@ export const patchUser = async({ userEmail, userPassword }, emailInput, password
   if (res?.ok) { window.location.reload(); };
   if (res?.error) {
     showAuthMsg(res.message);
-    emailInput.classList.add('input-invalid');
-    emailInput.nextElementSibling.classList.add('input-icon-invalid');
-    passwordInput.classList.add('input-invalid');
-    passwordInput.nextElementSibling.classList.add('input-icon-invalid');
+    addInputInvalidAll(inputElements);
   };
 };
 export const deleteUser = async() => {
@@ -105,11 +99,11 @@ window.addEventListener('load', async() => {
         modalExit.addEventListener('click', e => {
           e.preventDefault();
           modal.classList.remove('open-modal');
-          clearAuthMsg();
           if (modalTrigger.id === 'trigger-auth') {
+            clearAuthMsg();
             authForm.reset();
             const invalidElements = authForm.querySelectorAll('.input-invalid');
-            clearInputInvalidStyle(invalidElements);
+            clearInputInvalidAll(invalidElements);
           };
         });
       });
@@ -130,7 +124,7 @@ window.addEventListener('load', async() => {
     authButton.textContent = authButton.textContent === '登入帳戶' ? '註冊帳戶' : '登入帳戶';
     clearAuthMsg();
     const invalidElements = authForm.querySelectorAll('.input-invalid');
-    invalidElements.length > 0 && clearInputInvalidStyle(invalidElements);
+    invalidElements.length > 0 && clearInputInvalidAll(invalidElements);
     authForm.reset();
   });
 
@@ -149,11 +143,14 @@ window.addEventListener('load', async() => {
     const userEmail =  formData.get('user-email');
     const userPassword = formData.get('user-password');
     const userName = formData.get('user-name');
-
     if (authButton.textContent === '登入帳戶') {
-      await patchUser({ userEmail, userPassword }, emailInput, passwordInput);
+      userEmail === '' || userPassword === ''
+        ? [emailInput, passwordInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value))
+        : await patchUser({ userEmail, userPassword }, [emailInput, passwordInput]);
     } else if (authButton.textContent === '註冊帳戶') {
-      await postUser({ userEmail, userPassword, userName }, emailInput, passwordInput, nameInput);
-    };
+      userEmail === '' || userPassword === '' || userName === ''
+        ? [emailInput, passwordInput, nameInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value))
+        : await postUser({ userEmail, userPassword, userName }, [emailInput, passwordInput, nameInput]);
+    }
   });
 });

@@ -17,34 +17,52 @@
       <hr/>
       <div class="section-booking">
         <div class="title-booking">您的連絡資訊</div>
-        <div>
+        <div class="field field-booking">
           <label for="buyer-name">聯絡姓名：</label>
-          <input type="text" id="buyer-name" name="buyer-name">
+          <input type="text" id="buyer-name" name="buyer-name" placeholder="請填寫中文真實姓名">
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
-        <div>
+        <div class="field field-booking">
           <label for="buyer-email">聯絡信箱：</label>
-          <input type="text" id="buyer-email" name="buyer-email">
+          <input type="text" id="buyer-email" name="buyer-email" placeholder="example@email.com">
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
-        <div>
+        <div class="field field-booking">
           <label for="buyer-phone">手機號碼：</label>
-          <input type="text" id="buyer-phone" name="buyer-phone">
+          <input type="text" id="buyer-phone" name="buyer-phone" placeholder="0912000123">
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
         <div id="msg-order">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
       </div>
       <hr/>
       <div class="section-booking">
         <div class="title-booking">信用卡付款資訊</div>
-        <div class="row row-tappay">
+        <div class="field field-booking row row-tappay">
           <div>卡片號碼：</div>
           <div class="tpfield" id="card-number"></div>
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
-        <div class="row row-tappay">
+        <div class="field field-booking row row-tappay">
           <div>過期時間：</div>
           <div class="tpfield" id="card-expiration-date"></div>
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
-        <div class="row row-tappay">
+        <div class="field field-booking row row-tappay">
           <div>驗證密碼：</div>
           <div class="tpfield" id="card-ccv"></div>
+          <div class="input-icon input-icon-invalid-booking">
+            <img src="/static/image/icon_error.svg">
+          </div>
         </div>
       </div>
       <hr/>

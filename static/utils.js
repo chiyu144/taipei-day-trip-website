@@ -23,13 +23,21 @@ export const clearView = root => {
   };
 };
 
-export const clearInputInvalidStyle = invalidElements => {
-  // * invalidElements 必須是個 Array
+export const addInputInvalidAll = inputElements => {
+  // * invalidElements 必須是 Array
+  inputElements.forEach(inputElement => {
+    inputElement.classList.add('input-invalid');
+    inputElement.nextElementSibling.classList.add('input-icon-invalid');
+  });
+};
+
+export const clearInputInvalidAll = invalidElements => {
+  // * invalidElements 必須是 Array
   invalidElements.forEach(invalidElement => {
     invalidElement.classList.remove('input-invalid');
     invalidElement.nextElementSibling.classList.remove('input-icon-invalid');
   });
-}
+};
 
 export const checkUserState = async() => {
   const userState = await userApi('GET');
@@ -81,7 +89,6 @@ export const ntdDisplay = (num = 0) => {
   return `新台幣 ${num} 元`
 }
 
-// * 自己研究出來的輪播
 export class Carousel {
   constructor(id) {
     this.wrapCarousel = document.querySelector(`#${id}`);
