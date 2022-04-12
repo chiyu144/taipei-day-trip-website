@@ -45,7 +45,7 @@
   cursor: pointer;
 }
 /* Modal: Auth's CSS */
-#modal-auth  #form-auth > div:first-child {
+#modal-auth  #form-auth > div:first-child, #title-modal-msg {
   font-size: var(--font-size-lg);
   font-weight: 700;
   text-align: center;
@@ -94,6 +94,17 @@
 #modal-auth #toggle-auth > a {
   text-decoration: underline;
   cursor: pointer;
+}
+#content-modal-msg {
+  margin: 16px 0;
+  text-align: center;
+  font-size: var(--font-size-modal);
+}
+#button-modal-msg {
+  width: 75px;
+  height: 36px;
+  display: block;
+  margin: 0 auto;
 }
 @media screen and (max-width: 480px) {
   .container-modal {

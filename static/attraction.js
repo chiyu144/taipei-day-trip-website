@@ -1,5 +1,5 @@
 import { getAttractionSpotApi, bookingApi } from './apis.js';
-import { onImgLoaded, checkUserState, Carousel } from './utils.js';
+import { onImgLoaded, Carousel, showMsgModal } from './utils.js';
 
 let attractionUrl = new URL(window.location);
 let id = attractionUrl.pathname.split('/')[2];
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dateBooking = formBooking.querySelector('#date-booking');
   const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
+  const triggerMsg = document.querySelector('.trigger-msg');
 
   const render = () => {
     if(detail.data?.length > 0) {
@@ -69,20 +70,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   const booking = async(e) => {
     e.preventDefault();
-    if (await checkUserState()) {
-      await postBooking({
-        attractionId: detail.data[0].id,
-        date: dateBooking.value,
-        time: formBooking.querySelector('input[name=radio-booking]:checked').id,
-        price: parseInt(msgGuideFee.textContent),
-      });
+    console.log();
+    if (sessionStorage.getItem('member') !== '') {
+      if (dateBooking.value === '') {
+        showMsgModal(triggerMsg, { title: '錯誤', content: '請選擇正確日期。' });
+      } else {
+        await postBooking({
+          attractionId: detail.data[0].id,
+          date: dateBooking.value,
+          time: formBooking.querySelector('input[name=radio-booking]:checked').id,
+          price: parseInt(msgGuideFee.textContent),
+        });
+      }
     } else {
       document.querySelector('#trigger-auth').click();
     };
   };
 
   render();
-  const today = new Date(new Date()).toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA');
   dateBooking.setAttribute('min', today);
   formBooking.addEventListener('submit', booking);
   new Carousel('carousel-detail').init();

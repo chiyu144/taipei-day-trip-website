@@ -73,6 +73,21 @@ export const inputValidation = (type, inputElement, value) => {
   }
 };
 
+export const showMsgModal = (trigger, msgObj, buttonText = '確定') => {
+  const modal = document.querySelector('#modal-msg');
+  const title = document.querySelector('#title-modal-msg');
+  const content = document.querySelector('#content-modal-msg');
+  const button = document.querySelector('#button-modal-msg');
+  title.textContent = msgObj.title;
+  content.textContent = msgObj.content;
+  button.textContent = buttonText;
+  button.addEventListener('click', e => {
+    e.preventDefault();
+    modal.classList.remove('open-modal');
+  });
+  trigger.click();
+}
+
 export const animateArrayItems = (container, animationName, className) => {
   container.addEventListener('animationend', e => {
     if (e.animationName === animationName) {
