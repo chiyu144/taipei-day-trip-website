@@ -46,10 +46,15 @@ export const checkClassExist = (element, className) => {
 };
 
 export const inputValidation = (type, inputElement, value) => {
-  // * type : 要驗證哪種格式，分別是 'email'、'password'、'phone'
-  const regex = type === 'email' ? new RegExp(/\S+@\S+\.\S+/) : type === 'password' ? new RegExp() : new RegExp();
+  // * type : 要驗證哪種格式，分別有 'email'、'password'、'phone'、'name'
+  const regex = {
+    email: new RegExp(/\S+@\S+\.\S+/),
+    password: new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/),
+    phone: new RegExp(/^[09]{2}\d{8}$/),
+    name:  new RegExp(/^[\u4e00-\u9fa5]{2,5}$/)
+  };
   const inputIcon = inputElement.nextElementSibling;
-  if (value === '' || !regex.test(value)) {
+  if (value === '' || !regex[type].test(value)) {
     !checkClassExist(inputIcon, 'input-icon-invalid') && inputIcon.classList.add('input-icon-invalid');
     !checkClassExist(inputElement, 'input-invalid') && inputElement.classList.add('input-invalid');
     return false;
