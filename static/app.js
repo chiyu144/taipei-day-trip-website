@@ -30,22 +30,36 @@ export const getUser = async(authModalTrigger, bookingNum) => {
     isLogin = false;
   }
 };
-export const postUser = async({ userEmail, userPassword, userName }) => {
+export const postUser = async({ userEmail, userPassword, userName }, emailInput, passwordInput, nameInput) => {
   const res = await userApi('POST', {
     name: userName,
     email: userEmail,
     password: userPassword
   });
   if (res?.ok) { showAuthMsg('註冊成功，請重新登入'); };
-  if (res?.error) { showAuthMsg(res.message); }
+  if (res?.error) {
+    showAuthMsg(res.message);
+    emailInput.classList.add('input-invalid');
+    emailInput.nextElementSibling.classList.add('input-icon-invalid');
+    passwordInput.classList.add('input-invalid');
+    passwordInput.nextElementSibling.classList.add('input-icon-invalid');
+    nameInput.classList.add('input-invalid');
+    nameInput.nextElementSibling.classList.add('input-icon-invalid');
+  }
 };
-export const patchUser = async({ userEmail, userPassword }) => {
+export const patchUser = async({ userEmail, userPassword }, emailInput, passwordInput) => {
   const res = await userApi('PATCH', {
     email: userEmail,
     password: userPassword
   });
   if (res?.ok) { window.location.reload(); };
-  if (res?.error) { showAuthMsg(res.message); };
+  if (res?.error) {
+    showAuthMsg(res.message);
+    emailInput.classList.add('input-invalid');
+    emailInput.nextElementSibling.classList.add('input-icon-invalid');
+    passwordInput.classList.add('input-invalid');
+    passwordInput.nextElementSibling.classList.add('input-icon-invalid');
+  };
 };
 export const deleteUser = async() => {
   const res = await userApi('DELETE');
@@ -57,7 +71,7 @@ window.addEventListener('load', async() => {
   const bookingNav = document.querySelector('#nav-booking');
   const authForm = document.querySelector('#form-auth');
   const authFormTitle = authForm.querySelector('div:first-child');
-  const userNameField = document.querySelector('.field-user-name');
+  const fieldWrap = document.querySelector('.wrap-field');
   const authInputs = document.querySelectorAll('#form-auth input');
   const authButton = authForm.querySelector('button');
   const authMsgToggle = document.querySelector('#toggle-auth > span');
@@ -65,6 +79,9 @@ window.addEventListener('load', async() => {
   const authModalTrigger = document.querySelector('#trigger-auth');
   const modalTriggers = document.querySelectorAll('[data-modal]');
   const bookingNum = document.querySelector('#nav-booking-num');
+  const emailInput = document.querySelector('#user-email');
+  const passwordInput = document.querySelector('#user-password');
+  const nameInput = document.querySelector('#user-name');
   
   await getUser(authModalTrigger, bookingNum);
 
@@ -109,7 +126,7 @@ window.addEventListener('load', async() => {
     authFormTitle.textContent = authFormTitle.textContent === '登入會員帳號' ? '註冊會員帳號' : '登入會員帳號';
     authMsgToggle.textContent = authMsgToggle.textContent === '還沒有帳戶？' ? '已有帳戶？' : '還沒有帳戶？';
     authToggle.textContent = authToggle.textContent === '點此註冊' ? '點此登入' : '點此註冊';
-    userNameField.classList.toggle('anime-field-user-name');
+    fieldWrap.classList.toggle('anime-wrap-field');
     authButton.textContent = authButton.textContent === '登入帳戶' ? '註冊帳戶' : '登入帳戶';
     clearAuthMsg();
     const invalidElements = authForm.querySelectorAll('.input-invalid');
@@ -117,11 +134,14 @@ window.addEventListener('load', async() => {
     authForm.reset();
   });
 
-  authInputs.addEventListener('keyup', e => {
-    checkClassExist(e.currentTarget, 'input-invalid') && e.currentTarget.classList.remove('input-invalid');
-    checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') && e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
+  const validationTypes = ['email', 'password', 'name'];
+  authInputs.forEach((authInput, index) => {
+    authInput.addEventListener('keyup', e => {
+      checkClassExist(e.currentTarget, 'input-invalid') && e.currentTarget.classList.remove('input-invalid');
+      checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') && e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
+    });
+    authInput.addEventListener('blur', e => inputValidation(validationTypes[index], e.currentTarget, e.currentTarget.value));
   });
-  authInputs.addEventListener('blur', e => inputValidation('email', e.currentTarget, e.currentTarget.value));
 
   authForm.addEventListener('submit', async(e) => {
     e.preventDefault();
@@ -131,9 +151,9 @@ window.addEventListener('load', async() => {
     const userName = formData.get('user-name');
 
     if (authButton.textContent === '登入帳戶') {
-      await patchUser({ userEmail, userPassword });
+      await patchUser({ userEmail, userPassword }, emailInput, passwordInput);
     } else if (authButton.textContent === '註冊帳戶') {
-      await postUser({ userEmail, userPassword, userName });
+      await postUser({ userEmail, userPassword, userName }, emailInput, passwordInput, nameInput);
     };
   });
 });
