@@ -137,31 +137,25 @@ document.addEventListener('DOMContentLoaded', async() => {
   tappaySetup();
   tappayValidation(tappayFields);
 
-  orderForm.addEventListener('submit', async(e) => {
+  orderForm.addEventListener('submit', e => {
     e.preventDefault();
     const tappayStatus = TPDirect.card.getTappayFieldsStatus();
     const formData = new FormData(e.target);
     const buyerName =  formData.get('buyer-name');
     const buyerEmail = formData.get('buyer-email');
     const buyerPhone = formData.get('buyer-phone');
-    if (tappayStatus.canGetPrime === false ||
-        buyerName === '' ||
-        buyerEmail === '' ||
-        buyerPhone === ''
-      ) {
+    if (tappayStatus.canGetPrime === false || buyerName === '' || buyerEmail === '' || buyerPhone === '') {
       orderInputs.forEach((orderInput, index) => inputValidation(validationTypes[index], orderInput, orderInput.value));
       addInputInvalidAll(tappayFields);
       showMsgModal(msgModalTrigger, { title: '錯誤', content: '請填寫完整的正確資訊。' });
       return;
     };
-    TPDirect.card.getPrime(result => {
+    TPDirect.card.getPrime(async(result) => {
       if (result.status !== 0) {
         addInputInvalidAll(tappayFields);
         showMsgModal(msgModalTrigger, { title: '信用卡錯誤', content: `${result.msg}` });
         return;
       };
-      console.log('get prime 成功，prime: ' + result.card.prime);
-      console.log(bookings.map(({price, ...booking}) => booking));
       await postOrder({
         prime: result.card.prime,
         order: {

@@ -65,7 +65,7 @@ export const bookingApi = async(method, bodyObj = undefined, attractionId = unde
 };
 export const ordersApi = async(method, bodyObj = undefined) => {
   try {
-    const apiUrl = orderNumber ? new URL(`/api/orders/${orderNumber}`, host) : new URL('/api/orders', host);
+    const apiUrl = new URL('/api/orders', host);
     const res = await fetch(apiUrl.toString(), {
       method: `${method}`,
       headers: apiHeaders,

@@ -44,6 +44,8 @@ app.config['JWT_ALG'] = config['JWT']['alg']
 app.config['JWT_SECRET_KEY'] = config['JWT']['secret_key']
 app.config['TAPPAY_APP_ID'] = config['TapPay']['app_id']
 app.config['TAPPAY_APP_KEY'] = config['TapPay']['app_key']
+app.config['TAPPAY_PARTNER_KEY'] = config['TapPay']['partner_key']
+app.config['TAPPAY_MERCHANT_ID'] = config['TapPay']['merchant_id']
 app.jinja_env.globals.update(tappayAppId = app.config['TAPPAY_APP_ID'])
 app.jinja_env.globals.update(tappayAppKey = app.config['TAPPAY_APP_KEY'])
 
