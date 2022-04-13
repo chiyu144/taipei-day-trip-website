@@ -1,8 +1,12 @@
-import { bookingApi } from './apis.js';
-import { onImgLoaded, checkUserState, ntdDisplay, animateArrayItems, checkBookingNum } from './utils.js'
+import { bookingApi, ordersApi } from './apis.js';
+import {
+  onImgLoaded, ntdDisplay, animateArrayItems, checkBookingNum,
+  checkClassExist, inputValidation, showMsgModal, addInputInvalidAll
+} from './utils.js'
+import { tappaySetup, tappayValidation } from './tappay.js'
 
-let booking = [];
-let totalPrice = 0;
+let bookings = [];
+let orderTotalPrice = 0;
 
 const getBooking = async() => {
   const res = await bookingApi('GET')
@@ -13,35 +17,45 @@ const deleteBooking = async(attractionId, reRender) => {
   const res = await bookingApi('DELETE', undefined, attractionId);
   if (res?.error) { window.location.href = '/'; };
   if (res?.ok) { 
-    totalPrice = 0;
-    booking = await getBooking();
+    orderTotalPrice = 0;
+    bookings = await getBooking();
     const rows = document.querySelectorAll('.row-booking');
     const bookingNum = document.querySelector('#nav-booking-num');
     rows.forEach(row => row.remove());
     bookingNum.textContent = await checkBookingNum();
-    reRender(booking);
+    reRender(bookings);
   };
 };
+const postOrder = async({prime, order}) => {
+  const res = await ordersApi('POST', {prime, order});
+  if (res?.ok) {
+    const thankyouPage = new URL('/thankyou', window.location.href);
+    thankyouPage.searchParams.append('number', res.number)
+    window.location.href = thankyouPage.toString();
+  }
+}
 
 document.addEventListener('DOMContentLoaded', async() => {
-  if (!await checkUserState()) { window.location.href = '/'; };
-  booking = await getBooking();
-  const gridBooking = document.querySelector('.grid-booking');
+  bookings = await getBooking();
+  const bookingGrid = document.querySelector('.grid-booking');
   const memberNames = document.querySelectorAll('.member-name');
-  const priceBooking = document.querySelector('#price-booking > span');
+  const bookingPrice = document.querySelector('#price-booking > span');
   const orderForm = document.querySelector('#form-order');
+  const orderInputs = document.querySelectorAll('#form-order input');
+  const tappayFields = document.querySelectorAll('#form-order .tpfield');
   const loader = document.querySelector('.wrap-center');
-  const msgNoBooking = document.querySelector('.msg-no-booking');
+  const noBookingMsg = document.querySelector('.msg-no-booking');
+  const msgModalTrigger = document.querySelector('.trigger-msg');
   
-  const render = booking => {
+  const render = bookings => {
     memberNames.forEach(memberName => {
       memberName.textContent = JSON.parse(sessionStorage.getItem('member'))['sub_name']; 
     }) 
-    if(booking?.length > 0) {
+    if(bookings?.length > 0) {
       const fragment = document.createDocumentFragment();
       const infoKeys = ['台北一日遊', '日期', '時間', '費用', '地點'];
 
-      booking.forEach(({ attraction, date, price, time }, index) => {
+      bookings.forEach(({ attraction, date, price, time }, index) => {
         const thumbnail = document.createElement('img');
         thumbnail.classList.add('thumbnail-booking');
         thumbnail.src = attraction?.image;
@@ -95,23 +109,72 @@ document.addEventListener('DOMContentLoaded', async() => {
         row.appendChild(colRight);
 
         fragment.appendChild(row);
-        totalPrice += parseFloat(price);
+        orderTotalPrice += parseFloat(price);
       });
-      gridBooking.appendChild(fragment);
-      msgNoBooking.style.display = 'none';
+      bookingGrid.appendChild(fragment);
+      noBookingMsg.style.display = 'none';
       orderForm.style.display = 'block';
     } else {
-      msgNoBooking.style.display = 'block';
+      noBookingMsg.style.display = 'block';
       orderForm.style.display = 'none';
-      totalPrice = 0;
+      orderTotalPrice = 0;
     }
-    priceBooking.textContent = ntdDisplay(Math.trunc(totalPrice));
+    bookingPrice.textContent = ntdDisplay(Math.trunc(orderTotalPrice));
     loader.style.display = 'none';
   };
 
-  animateArrayItems(gridBooking, 'fade-in', 'run-fade-in-booking');
-  render(booking);
-  orderForm.addEventListener('submit', e => {
+  animateArrayItems(bookingGrid, 'fade-in', 'run-fade-in-booking');
+  render(bookings);
+
+  const validationTypes = ['name', 'email', 'phone'];
+  orderInputs.forEach((orderInput, index) => {
+    orderInput.addEventListener('keyup', e => {
+      checkClassExist(e.currentTarget, 'input-invalid') && e.currentTarget.classList.remove('input-invalid');
+      checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') && e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
+    });
+    orderInput.addEventListener('blur', e => inputValidation(validationTypes[index], e.currentTarget, e.currentTarget.value));
+  });
+  tappaySetup();
+  tappayValidation(tappayFields);
+
+  orderForm.addEventListener('submit', async(e) => {
     e.preventDefault();
-  })
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+    const formData = new FormData(e.target);
+    const buyerName =  formData.get('buyer-name');
+    const buyerEmail = formData.get('buyer-email');
+    const buyerPhone = formData.get('buyer-phone');
+    if (tappayStatus.canGetPrime === false ||
+        buyerName === '' ||
+        buyerEmail === '' ||
+        buyerPhone === ''
+      ) {
+      orderInputs.forEach((orderInput, index) => inputValidation(validationTypes[index], orderInput, orderInput.value));
+      addInputInvalidAll(tappayFields);
+      showMsgModal(msgModalTrigger, { title: '錯誤', content: '請填寫完整的正確資訊。' });
+      return;
+    };
+    TPDirect.card.getPrime(result => {
+      if (result.status !== 0) {
+        addInputInvalidAll(tappayFields);
+        showMsgModal(msgModalTrigger, { title: '信用卡錯誤', content: `${result.msg}` });
+        return;
+      };
+      console.log('get prime 成功，prime: ' + result.card.prime);
+      console.log(bookings.map(({price, ...booking}) => booking));
+      await postOrder({
+        prime: result.card.prime,
+        order: {
+          price: orderTotalPrice,
+          trip: bookings.map(booking => delete booking.price),
+          contact: {
+            name: buyerName,
+            email: buyerEmail,
+            phone: buyerPhone
+          }
+        }
+      });
+    });
+    
+  });
 });
