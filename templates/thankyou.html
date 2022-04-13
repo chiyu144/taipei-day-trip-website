@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_thankyou.css') }}">
+{% endblock %}
+{% block body %}
+  <div>Thank You</div>
+{% endblock %}
+{% block script %}
+  <script type="module" src="{{ url_for('static', filename='thankyou.js') }}"></script>
+{% endblock %}
