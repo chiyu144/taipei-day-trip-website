@@ -5,6 +5,7 @@ from flask.views import MethodView
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
 from utils.check_user_state import check_user_state
+from utils.input_validation import email_validation, password_validation, name_validation
 
 bp_m_user = Blueprint('m_user', __name__)
 
@@ -13,12 +14,6 @@ bp_m_user = Blueprint('m_user', __name__)
 def exist_email(cursor, new_user_email):
   cursor.execute('SELECT count(email) FROM member WHERE email = %s', (new_user_email, ))
   return True if int(cursor.fetchone()[0]) > 0 else False
-
-# 檢查 email 格式是否正確
-def invalid_email(new_user_email):
-  email_format: str = r"(^[a-zA-Z0-9'_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-  email= f'{new_user_email}'
-  return False if re.match(email_format, email, re.IGNORECASE) else True
 
 # 會員註冊
 @with_cnx(need_commit = True)
@@ -53,11 +48,15 @@ class Api_User(MethodView):
       new_user_name = request.get_json()['name']
       new_user_email = request.get_json()['email']
       new_user_password = request.get_json()['password']
-      if new_user_name and new_user_email and new_user_password:
+      if all((new_user_name, new_user_email, new_user_password)):
         if exist_email(new_user_email):
           raise ValueError('註冊失敗，您的 Email 已被註冊')
-        if invalid_email(new_user_email):
+        if not email_validation(new_user_email):
           raise TypeError('註冊失敗，Email 格式不正確')
+        if not password_validation(new_user_password):
+          raise TypeError('註冊失敗，密碼須由 8 - 16 個英數字及至少 1 個特殊符號組成')
+        if not name_validation(name):
+          raise TypeError('註冊失敗，請輸入中文真實姓名')
         else:
           signup_user(new_user_name, new_user_email, new_user_password)
           return jsonify({'ok': True})
@@ -73,9 +72,15 @@ class Api_User(MethodView):
     try:
       user_email = request.get_json()['email']
       user_password = request.get_json()['password']
-      if user_email and user_password:
+      if all((user_email, user_password)):
         valid_user = query_user(user_email, user_password)
-        if valid_user:
+        if not email_validation(user_email):
+          raise TypeError('登入失敗，Email 格式不正確')
+        elif not password_validation(user_password):
+          raise TypeError('登入失敗，密碼須由 8 - 16 個英數字及至少 1 個特殊符號組成')
+        elif not valid_user:
+          raise ValueError('登入失敗，帳號或密碼錯誤')
+        else:
           jwt_payload = {
             'sub': valid_user[0],
             'sub_name': valid_user[1],
@@ -86,8 +91,6 @@ class Api_User(MethodView):
           res = make_response(jsonify({ 'ok': True }))
           res.set_cookie('jwt', value = jwt_token, samesite = 'Strict', httponly = True)
           return res
-        else:
-          raise ValueError('登入失敗，帳號或密碼錯誤')
       else:
         raise TypeError('登入失敗，帳號或密碼皆不得為空')
     except (ValueError, TypeError) as e:

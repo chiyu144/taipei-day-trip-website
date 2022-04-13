@@ -4,17 +4,9 @@ from flask.views import MethodView
 from utils.check_user_state import check_user_state
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
+from utils.input_validation import date_validation
 
 bp_m_booking = Blueprint('m_booking', __name__)
-
-# 檢查日期是否正確
-def valid_date(date):
-  try:
-    if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
-      raise ValueError
-    return True
-  except ValueError:
-    return False
 
 # 取得行程
 # 可存多筆 Booking 資料，但 1 個景點只能 Booking 1 次，重複 Booking 相同景點會覆蓋為最新的那次
@@ -72,7 +64,6 @@ class Api_Booking(MethodView):
         raise PermissionError('取得行程資訊失敗，已登出，請重新登入')
       else:
         booking = query_booking(user_state['result']['sub'])
-        print(booking)
         if booking:
           return jsonify({ 'data': booking })
         else: return jsonify({ 'data': [] })
@@ -92,7 +83,7 @@ class Api_Booking(MethodView):
         raise PermissionError('預定行程失敗，已登出，請重新登入')
       elif not all((attraction_id, date, time, price)):
         raise TypeError('預定行程失敗，欄位皆不得為空')
-      elif not valid_date(date):
+      elif not date_validation(date):
         raise ValueError('預定行程失敗，日期格式錯誤')
       else:
         booking_schedule(user_state['result']['sub'], attraction_id, date, time, price)

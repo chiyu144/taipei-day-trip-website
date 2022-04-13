@@ -87,6 +87,7 @@
   height: 22px;
   text-align: center;
   margin-bottom: 15px;
+  font-size: var(--font-size-xs);
 }
 #toggle-auth {
   text-align: center;

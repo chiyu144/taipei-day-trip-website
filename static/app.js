@@ -38,7 +38,10 @@ export const postUser = async({ userEmail, userPassword, userName }, inputElemen
     email: userEmail,
     password: userPassword
   });
-  if (res?.ok) { showAuthMsg('註冊成功，請重新登入'); };
+  if (res?.ok) {
+    clearInputInvalidAll(inputElements);
+    showAuthMsg('註冊成功，請重新登入');
+  };
   if (res?.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
@@ -49,7 +52,10 @@ export const patchUser = async({ userEmail, userPassword }, inputElements) => {
     email: userEmail,
     password: userPassword
   });
-  if (res?.ok) { window.location.reload(); };
+  if (res?.ok) {
+    clearInputInvalidAll(inputElements);
+    window.location.reload();
+  };
   if (res?.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
@@ -145,12 +151,16 @@ window.addEventListener('load', async() => {
     const userName = formData.get('user-name');
     if (authButton.textContent === '登入帳戶') {
       userEmail === '' || userPassword === ''
-        ? [emailInput, passwordInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value))
-        : await patchUser({ userEmail, userPassword }, [emailInput, passwordInput]);
+        ? (
+          [emailInput, passwordInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value)),
+          showAuthMsg('登入失敗，欄位皆不得為空')
+        ) : await patchUser({ userEmail, userPassword }, [emailInput, passwordInput]);
     } else if (authButton.textContent === '註冊帳戶') {
       userEmail === '' || userPassword === '' || userName === ''
-        ? [emailInput, passwordInput, nameInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value))
-        : await postUser({ userEmail, userPassword, userName }, [emailInput, passwordInput, nameInput]);
+        ? (
+          [emailInput, passwordInput, nameInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value)),
+          showAuthMsg('註冊失敗，欄位皆不得為空')
+        ) : await postUser({ userEmail, userPassword, userName }, [emailInput, passwordInput, nameInput]);
     }
   });
 });
