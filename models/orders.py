@@ -1,4 +1,5 @@
-import requests
+import requests, uuid
+from datetime import datetime
 from flask import current_app, Blueprint, request, abort, jsonify, make_response
 from flask.views import MethodView
 from utils.check_user_state import check_user_state
@@ -8,32 +9,57 @@ from utils.input_validation import email_validation, phone_validation, name_vali
 
 bp_m_orders = Blueprint('m_orders', __name__)
 
-def order_via_tappay(prime, order):
+def order_via_tappay(prime, order_number, order_detail):
   api_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
   headers = {
     'Content-Type': 'application/json',
     'x-api-key': current_app.config['TAPPAY_PARTNER_KEY']
   }
-  count_trip = len(order['trip'])
+  count_trip = len(order_detail['trip'])
   post_body = {
     'prime': prime,
     'partner_key': current_app.config['TAPPAY_PARTNER_KEY'],
     'merchant_id': current_app.config['TAPPAY_MERCHANT_ID'],
+    'order_number': order_number,
     'details': f'[Test] 台北一日遊 - {count_trip} 筆行程',
-    'amount': order['price'],
+    'amount': order_detail['price'],
     'cardholder': {
-      'phone_number': order['contact']['phone'],
-      'name': order['contact']['name'],
-      'email': order['contact']['email']
+      'phone_number': order_detail['contact']['phone'],
+      'name': order_detail['contact']['name'],
+      'email': order_detail['contact']['email']
     },
     'remember': False
   }
   res = requests.post(api_url, headers = headers, json = post_body)
   return res.json()
 
+def order_details(order_number, order_detail):
+  print(order_number, order_detail)
+  values = []
+  for row in order_detail:
+    print(row)
+    values.append((order_number, row['attraction']['id'], row['attraction']['name'], row['attraction']['address'], row['attraction']['image'], row['date'], row['time']))
+  return values
+
 @with_cnx(need_commit = True)
-def insert_orders(cursor, data):
-  return 'OK'
+def insert_order_and_details(cursor, order_number, member_id, order):
+  insert_sql_order = '''
+    INSERT INTO `order` (id, member_id, price, contact_name, contact_email, contact_phone)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+  '''
+  insert_value_order = (order_number, member_id, order['price'], order['contact']['name'], order['contact']['email'], order['contact']['phone'])
+  insert_sql_details = '''
+    INSERT INTO order_detail (order_id, attraction_id, attraction_name, attraction_address, attraction_image, booking_date, booking_time)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+  '''
+  insert_value_details = order_details(order_number, order['trip'])
+  cursor.execute(insert_sql_order, insert_value_order)
+  cursor.executemany(insert_sql_details, insert_value_details)
+  cursor.execute('DELETE FROM booking WHERE member_id = %s', (member_id, ))
+
+@with_cnx(need_commit=True)
+def update_order_status(cursor, order_status, member_id):
+  cursor.execute('UPDATE `order` SET order_status = %s, WHERE member_id = %s', (order_status, member_id))
 class Api_Orders(MethodView): 
   def get(self):
     # api: 取得訂單列表 (之後更新)
@@ -56,11 +82,18 @@ class Api_Orders(MethodView):
       elif not email_validation(order['contact']['email']) or not phone_validation(order['contact']['phone']) or not name_validation(order['contact']['name']):
         raise TypeError('訂單建立失敗，買家資訊格式錯誤')
       else:
-        tappay_res = order_via_tappay(prime, order)
-
-        print('tappay_res', tappay_res, type(tappay_res))
-        return jsonify({ 'ok': True })
-    except TypeError as e:
+        order_number = f'{uuid.uuid4().hex}{datetime.now().strftime("%Y%m%d%H%M%S")}'
+        insert_order_and_details(order_number, user_state['result']['sub'], order)
+        tappay_res = order_via_tappay(prime, order_number, order)
+        if tappay_res['status'] == 0:
+          update_order_status(0, user_state['result']['sub'])
+          return jsonify({ 'data': {
+            'number': tappay_res['order_number'],
+            'payment': { 'status': 0, 'message': '訂單建立成功，付款成功' }
+          } })
+        else:
+          raise ValueError('訂單已成立，但付款失敗，請重新進行付款流程')
+    except (TypeError, ValueError) as e:
       abort(400, description = abort_msg(e))
     except PermissionError as e:
       abort(403, description = abort_msg(e))
@@ -69,3 +102,5 @@ class Api_Orders(MethodView):
 
 
 bp_m_orders.add_url_rule('/orders', view_func=Api_Orders.as_view('api_orders'))
+
+
