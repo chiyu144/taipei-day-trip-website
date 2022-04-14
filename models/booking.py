@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, request, abort, jsonify
 from flask.views import MethodView
 from utils.check_user_state import check_user_state
@@ -38,8 +38,8 @@ def query_booking(cursor, member_id):
 def booking_schedule(cursor, member_id, attraction_id, date, time, price):
   cursor.execute('SELECT count(attraction_id) FROM booking WHERE member_id = %s AND attraction_id = %s', (member_id, attraction_id))
   if int(cursor.fetchone()[0]) > 0:
-    updated_time = datetime.now().isoformat()
-    update_sql = 'UPDATE booking SET date = %s, time = %s, price = %s, updated_time = %s WHERE member_id = %s AND attraction_id = %s;'
+    updated_time = datetime.now(timezone.utc).astimezone().isoformat()
+    update_sql = 'UPDATE booking SET date = %s, time = %s, price = %s, updated_time = %s WHERE member_id = %s AND attraction_id = %s'
     update_value = (date, time, price, updated_time, member_id, attraction_id)
     cursor.execute(update_sql, update_value)
   else:

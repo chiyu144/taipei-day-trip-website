@@ -22,4 +22,4 @@ def name_validation(name):
 
 def date_validation(date):
   # YYYY-DD-MM
-  return True if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d') else False
+  return True if date == datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d') else False

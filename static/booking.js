@@ -28,10 +28,14 @@ const deleteBooking = async(attractionId, reRender) => {
 };
 const postOrder = async({prime, order}) => {
   const res = await ordersApi('POST', {prime, order});
-  if (res?.ok) {
-    const thankyouPage = new URL('/thankyou', window.location.href);
-    thankyouPage.searchParams.append('number', res.number)
-    window.location.href = thankyouPage.toString();
+  console.log(res);
+  if (res?.payment?.status === 0) {
+    console.log('跳轉');
+    // const thankyouPage = new URL('/thankyou', window.location.href);
+    // thankyouPage.searchParams.append('number', res.number)
+    // window.location.href = thankyouPage.toString();
+  } else {
+    console.log(`${res.message}`);
   }
 }
 
@@ -72,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
         const infoValues = [
           attraction?.name,
-          new Date(date).toISOString().split('T')[0],
+          new Date(date).toLocaleDateString('en-CA'),
           time === 'morning' ? '早上 9 點到下午 4 點' : '下午 1 點到晚上 8 點',
           ntdDisplay(Math.trunc(price)),
           attraction?.address
@@ -160,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         prime: result.card.prime,
         order: {
           price: orderTotalPrice,
-          trip: bookings.map(booking => delete booking.price),
+          trip: bookings.map(({price, date, ...booking}) => ({date: new Date(date).toLocaleDateString('en-CA'), ...booking})),
           contact: {
             name: buyerName,
             email: buyerEmail,
