@@ -153,6 +153,11 @@ footer {
   background-color: var(--color-gray-300);
 }
 @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+#progress-bar {
+  flex: 0 0 12px;
+  width: 0%;
+  background: linear-gradient(270deg, var(--color-cyan-800) 0%, var(--color-cyan-100) 100%);
+}
 .run-fade-in-index { animation: fade-in .15s ease-in; }
 .run-fade-in-booking { animation: fade-in .2s ease-in; }
 .tpfield {

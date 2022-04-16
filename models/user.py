@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import re, jwt
 from flask import current_app, Blueprint, request, abort, jsonify, make_response
 from flask.views import MethodView
@@ -34,13 +34,13 @@ class Api_User(MethodView):
       jwt_cookie = request.cookies.get('jwt')
       user_state = check_user_state(jwt_cookie)
       if user_state['error'] == 'expired':
-        raise PermissionError(user_state['message'])
+        return jsonify({ 'isLogin': False, 'data': 'expired' })
       elif user_state['error'] == 'none':
-        return jsonify({ 'data': None })
+        return jsonify({ 'isLogin': False, 'data': None })
       else:
-        return jsonify({ 'data': user_state['result'] })
-    except PermissionError as e:
-      abort(403, description = abort_msg(e))
+        return jsonify({ 'isLogin': True, 'data': user_state['result'] })
+    except Exception as e:
+      abort(500, description = abort_msg(e))
 
   def post(self):
     # api: 會員註冊
@@ -85,7 +85,7 @@ class Api_User(MethodView):
             'sub': valid_user[0],
             'sub_name': valid_user[1],
             'sub_email': user_email,
-            'exp': datetime.now() + timedelta(minutes = 60)
+            'exp': datetime.utcnow() + timedelta(minutes = 3)
           }
           jwt_token = jwt.encode(jwt_payload, current_app.config['JWT_SECRET_KEY'], algorithm = current_app.config['JWT_ALG'])
           res = make_response(jsonify({ 'ok': True }))

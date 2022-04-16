@@ -41,7 +41,11 @@ export const clearInputInvalidAll = invalidElements => {
 
 export const checkUserState = async() => {
   const userState = await userApi('GET');
-  return (!userState?.data || userState.error) ? false : userState.data;
+  if (userState.isLogin) {
+    return userState.data;
+  } else {
+    return userState.data === 'expired' ? 'expired' : false;
+  }
 };
 
 export const checkBookingNum = async() => {
@@ -73,16 +77,24 @@ export const inputValidation = (type, inputElement, value) => {
   }
 };
 
-export const showMsgModal = (trigger, msgObj, buttonText = '確定') => {
+export const showMsgModal = (trigger, contentText, isLoginExpired = false) => {
   const modal = document.querySelector('#modal-msg');
   const title = document.querySelector('#title-modal-msg');
   const content = document.querySelector('#content-modal-msg');
   const button = document.querySelector('#button-modal-msg');
-  title.textContent = msgObj.title;
-  content.textContent = msgObj.content;
-  button.textContent = buttonText;
+  if (isLoginExpired) {
+    const exits = document.querySelectorAll('.exit-modal');
+    exits.forEach(exit => {
+      exit.style.pointerEvents = 'none';
+      if(exit.classList.contains('close-modal')) exit.style.display = 'none';
+    });
+  };
+  title.textContent = isLoginExpired ? '連線逾時' : '錯誤';
+  content.textContent = contentText;
+  button.textContent = isLoginExpired ? '回首頁' : '確定';
   button.addEventListener('click', e => {
     e.preventDefault();
+    if(isLoginExpired) { window.location.href = '/'; };
     modal.classList.remove('open-modal');
   });
   trigger.click();
@@ -100,9 +112,27 @@ export const animateArrayItems = (container, animationName, className) => {
   });
 }
 
+export const animeProgressBar = async(startTime = undefined) => {
+  const progressBar = document.querySelector('#progress-bar');
+  return await new Promise(resolve => {
+    const intervalTimerId = setInterval(() => {
+      const timePassed = new Date() - startTime;
+      console.log(timePassed);
+      let progress = timePassed / 500;
+      if (progress > 1) { progress = 1; }
+      let delta = Math.pow(progress, 2);
+      progressBar.style.width = `${ 100 * Math.abs(delta) }%`;
+      if( progress === 1 ) {
+        clearInterval(intervalTimerId);
+        resolve(false);
+      };
+    }, 20);
+  })
+};
+
 export const ntdDisplay = (num = 0) => {
-  return `新台幣 ${num} 元`
-}
+  return `新台幣 ${num} 元`;
+};
 
 export class Carousel {
   constructor(id) {
@@ -160,8 +190,8 @@ export class Carousel {
   animateSlide(newCarouselPos, isOnClone, targetSlideIndex) {
     const start = new Date();
     const timerId = setInterval(() => {
-      const timePassed = new Date - start;
-      let progress = timePassed / 500;
+      const timePassed = new Date() - start;
+      let progress = timePassed / 400;
       if (progress > 1) { progress = 1; }
       let delta = Math.pow(progress, 2);
       this.carousel.style.left = `${this.currentCarouselPos + Math.abs(newCarouselPos - this.currentCarouselPos) * delta * this.direction * -1}%`;

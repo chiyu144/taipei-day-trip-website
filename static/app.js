@@ -1,7 +1,7 @@
 import { userApi } from './apis.js'
 import {
   checkUserState, inputValidation, checkClassExist, clearInputInvalidAll,
-  addInputInvalidAll } from './utils.js'
+  addInputInvalidAll, showMsgModal } from './utils.js'
 
 let isLogin = false;
 
@@ -18,19 +18,20 @@ const clearAuthMsg = () => {
 
 export const getUser = async(authModalTrigger, bookingNum) => {
   const member = await checkUserState();
-  if (member) {
+  if (member && member !== 'expired') {    
     authModalTrigger.textContent = '登出系統';
     bookingNum.textContent = member.booking_num;
     bookingNum.style.visibility = 'visible';
     sessionStorage.setItem('member', JSON.stringify(member));
     isLogin = true;
   } else {
-    if (window.location.pathname === '/booking') { window.location.href = '/' } 
     authModalTrigger.textContent = '登入/註冊';
     bookingNum.style.visibility = 'hidden';
     sessionStorage.setItem('member', '');
     isLogin = false;
-  }
+    const msgModalTrigger = document.querySelector('#trigger-msg-global');
+    showMsgModal(msgModalTrigger, `${res.message}`, member === 'expired' ? true : false);
+  };
 };
 export const postUser = async({ userEmail, userPassword, userName }, inputElements) => {
   const res = await userApi('POST', {
@@ -38,11 +39,11 @@ export const postUser = async({ userEmail, userPassword, userName }, inputElemen
     email: userEmail,
     password: userPassword
   });
-  if (res?.ok) {
+  if (res.ok) {
     clearInputInvalidAll(inputElements);
     showAuthMsg('註冊成功，請重新登入');
   };
-  if (res?.error) {
+  if (res.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
   }
@@ -52,18 +53,18 @@ export const patchUser = async({ userEmail, userPassword }, inputElements) => {
     email: userEmail,
     password: userPassword
   });
-  if (res?.ok) {
+  if (res.ok) {
     clearInputInvalidAll(inputElements);
     window.location.reload();
   };
-  if (res?.error) {
+  if (res.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
   };
 };
 export const deleteUser = async() => {
   const res = await userApi('DELETE');
-  if (res?.ok) { window.location.reload(); };
+  if (res.ok) { window.location.reload(); };
 };
 
 

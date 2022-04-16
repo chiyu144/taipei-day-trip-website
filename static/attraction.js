@@ -8,9 +8,10 @@ const getAttractionSpot = async(id) => {
   const data = await getAttractionSpotApi(id);
   return data;
 };
-const postBooking = async({ attractionId, date, time, price }) => {
+const postBooking = async({ attractionId, date, time, price }, msgModalTrigger) => {
   const res = await bookingApi('POST', { attractionId, date, time, price });
-  if (res?.ok) { window.location.href = '/booking'; };
+  if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
+  if (res.ok) { window.location.href = '/booking'; };
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dateBooking = formBooking.querySelector('#date-booking');
   const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
   const msgGuideFee = document.querySelector('#msg-guide-fee');
-  const triggerMsg = document.querySelector('.trigger-msg');
+  const msgModalTrigger = document.querySelector('#trigger-msg-attraction');
 
   const render = () => {
     if(detail.data?.length > 0) {
@@ -73,14 +74,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log();
     if (sessionStorage.getItem('member') !== '') {
       if (dateBooking.value === '') {
-        showMsgModal(triggerMsg, { title: '錯誤', content: '請選擇正確日期。' });
+        showMsgModal(msgModalTrigger, '請選擇正確日期。');
       } else {
         await postBooking({
           attractionId: detail.data[0].id,
           date: dateBooking.value,
           time: formBooking.querySelector('input[name=radio-booking]:checked').id,
           price: parseInt(msgGuideFee.textContent),
-        });
+        }, msgModalTrigger);
       }
     } else {
       document.querySelector('#trigger-auth').click();

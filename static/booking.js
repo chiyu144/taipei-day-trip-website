@@ -1,7 +1,8 @@
 import { bookingApi, ordersApi } from './apis.js';
 import {
   onImgLoaded, ntdDisplay, animateArrayItems, checkBookingNum,
-  checkClassExist, inputValidation, showMsgModal, addInputInvalidAll
+  checkClassExist, inputValidation, showMsgModal, addInputInvalidAll,
+  animeProgressBar
 } from './utils.js'
 import { tappaySetup, tappayValidation } from './tappay.js'
 
@@ -10,34 +11,35 @@ let orderTotalPrice = 0;
 
 const getBooking = async() => {
   const res = await bookingApi('GET')
-  if (res?.error) { window.location.href = '/'; };
+  if (res.error) { window.location.href = '/'; };
   return res.data;
 };
-const deleteBooking = async(attractionId, reRender) => {
+const deleteBooking = async(attractionId, reRender, msgModalTrigger) => {
   const res = await bookingApi('DELETE', undefined, attractionId);
-  if (res?.error) { window.location.href = '/'; };
-  if (res?.ok) { 
+  if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
+  if (res.ok) { 
     orderTotalPrice = 0;
     bookings = await getBooking();
     const rows = document.querySelectorAll('.row-booking');
-    const bookingNum = document.querySelector('#nav-booking-num');
+    const bookingNum = document.querySelector('#nav-booking-num');    
     rows.forEach(row => row.remove());
     bookingNum.textContent = await checkBookingNum();
     reRender(bookings);
   };
 };
-const postOrder = async({prime, order}) => {
+const postOrder = async({prime, order}, msgModalTrigger) => {
+  const progressStartTime = new Date();
   const res = await ordersApi('POST', {prime, order});
-  console.log(res);
-  if (res?.payment?.status === 0) {
-    console.log('跳轉');
-    // const thankyouPage = new URL('/thankyou', window.location.href);
-    // thankyouPage.searchParams.append('number', res.number)
-    // window.location.href = thankyouPage.toString();
-  } else {
-    console.log(`${res.message}`);
-  }
-}
+  if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
+  if (res.ok) {
+    const isAnimating = await animeProgressBar(progressStartTime);
+    if(!isAnimating) {
+      const thankyouPage = new URL('/thankyou', window.location.href);
+      thankyouPage.searchParams.append('number', res.data.number);
+      window.location.href = thankyouPage.toString();
+    };
+  };
+};
 
 document.addEventListener('DOMContentLoaded', async() => {
   bookings = await getBooking();
@@ -49,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async() => {
   const tappayFields = document.querySelectorAll('#form-order .tpfield');
   const loader = document.querySelector('.wrap-center');
   const noBookingMsg = document.querySelector('.msg-no-booking');
-  const msgModalTrigger = document.querySelector('.trigger-msg');
+  const msgModalTrigger = document.querySelector('#trigger-msg-booking');
   
   const render = bookings => {
     memberNames.forEach(memberName => {
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async() => {
       const fragment = document.createDocumentFragment();
       const infoKeys = ['台北一日遊', '日期', '時間', '費用', '地點'];
 
-      bookings.forEach(({ attraction, date, price, time }, index) => {
+      bookings.forEach(({ attraction, date, price, time }, index) => {  
         const thumbnail = document.createElement('img');
         thumbnail.classList.add('thumbnail-booking');
         thumbnail.src = attraction?.image;
@@ -101,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         cancelBooking.setAttribute('data-attraction-id', attraction?.id);
         cancelBooking.addEventListener('click', async(e) => {
           const attractionId = e.currentTarget.getAttribute('data-attraction-id');
-          await deleteBooking(attractionId, render);
+          await deleteBooking(attractionId, render, msgModalTrigger);
         });
         cancelBooking.appendChild(iconDelete);
         colRight.appendChild(cancelBooking);
@@ -151,13 +153,13 @@ document.addEventListener('DOMContentLoaded', async() => {
     if (tappayStatus.canGetPrime === false || buyerName === '' || buyerEmail === '' || buyerPhone === '') {
       orderInputs.forEach((orderInput, index) => inputValidation(validationTypes[index], orderInput, orderInput.value));
       addInputInvalidAll(tappayFields);
-      showMsgModal(msgModalTrigger, { title: '錯誤', content: '請填寫完整的正確資訊。' });
+      showMsgModal(msgModalTrigger, '請填寫完整的正確資訊。');
       return;
     };
     TPDirect.card.getPrime(async(result) => {
       if (result.status !== 0) {
         addInputInvalidAll(tappayFields);
-        showMsgModal(msgModalTrigger, { title: '信用卡錯誤', content: `${result.msg}` });
+        showMsgModal(msgModalTrigger, `${result.msg}`);
         return;
       };
       await postOrder({
@@ -171,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             phone: buyerPhone
           }
         }
-      });
+      }, msgModalTrigger);
     });
     
   });

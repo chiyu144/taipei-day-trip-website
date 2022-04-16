@@ -66,15 +66,15 @@ def thankyou():
 # API error handler
 @app.errorhandler(500)
 def internal_server_error(e):
-  return jsonify({ 'error': True, 'message': str(e.description) }), 500
+  return jsonify({ 'error': True, 'message': str(e.description), 'status': 500 })
 
 @app.errorhandler(400)
 def bad_request_error(e):
-  return jsonify({ 'error': True, 'message': str(e.description) }), 400
+  return jsonify({ 'error': True, 'message': str(e.description), 'status': 400 })
 
 @app.errorhandler(403)
 def access_denied_error(e):
-  return jsonify({ 'error': True, 'message': str(e.description) }), 403
+  return jsonify({ 'error': True, 'message': str(e.description), 'status': 403 })
 
 app.register_blueprint(bp_m_attractions, url_prefix = '/api')
 app.register_blueprint(bp_m_attraction_spot, url_prefix = '/api')

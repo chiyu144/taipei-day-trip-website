@@ -69,6 +69,8 @@ class Api_Booking(MethodView):
         else: return jsonify({ 'data': [] })
     except PermissionError as e:
       abort(403, description = abort_msg(e))
+    except Exception as e:
+      abort(500, description = abort_msg(e))
 
   def post(self):
     # api: 新增 1 筆 Booking
@@ -106,6 +108,8 @@ class Api_Booking(MethodView):
         attraction_id = request.args.get('id', type = int)
         booking_cancel(user_state['result']['sub'], attraction_id)
         return jsonify({ 'ok': True })
+    except PermissionError as e:
+      abort(403, description = abort_msg(e))
     except Exception as e:
       abort(500, description = abort_msg(e))
 
