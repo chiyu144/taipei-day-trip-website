@@ -33,33 +33,32 @@ def order_via_tappay(prime, order_number, order_detail):
   res = requests.post(api_url, headers = headers, json = post_body)
   return res.json()
 
-def order_details(order_number, order_detail):
-  print(order_number, order_detail)
+def order_detail(order_number, order_detail):
   values = []
   for row in order_detail:
-    print(row)
     values.append((order_number, row['attraction']['id'], row['attraction']['name'], row['attraction']['address'], row['attraction']['image'], row['date'], row['time']))
   return values
 
 @with_cnx(need_commit = True)
-def insert_order_and_details(cursor, order_number, member_id, order):
+def insert_order_and_detail(cursor, order_number, member_id, order):
   insert_sql_order = '''
-    INSERT INTO `order` (id, member_id, price, contact_name, contact_email, contact_phone)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO `orders` (id, member_id, price, contact_name, contact_email, contact_phone)
+    VALUES (%s, %s, %s, %s, %s, %s)
   '''
   insert_value_order = (order_number, member_id, order['price'], order['contact']['name'], order['contact']['email'], order['contact']['phone'])
-  insert_sql_details = '''
-    INSERT INTO order_detail (order_id, attraction_id, attraction_name, attraction_address, attraction_image, booking_date, booking_time)
+  insert_sql_detail = '''
+    INSERT INTO order_details (order_id, attraction_id, attraction_name, attraction_address, attraction_image, booking_date, booking_time)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
   '''
-  insert_value_details = order_details(order_number, order['trip'])
+  insert_value_detail = order_detail(order_number, order['trip'])
+  print(insert_value_detail)
   cursor.execute(insert_sql_order, insert_value_order)
-  cursor.executemany(insert_sql_details, insert_value_details)
-  cursor.execute('DELETE FROM booking WHERE member_id = %s', (member_id, ))
+  cursor.executemany(insert_sql_detail, insert_value_detail)
+  cursor.execute('DELETE FROM booking WHERE booking.member_id = %s', (member_id, ))
 
 @with_cnx(need_commit=True)
-def update_order_status(cursor, order_status, member_id):
-  cursor.execute('UPDATE `order` SET order_status = %s, WHERE member_id = %s', (order_status, member_id))
+def update_order_status(cursor, order_status, order_id, rec_trade_id):
+  cursor.execute('UPDATE `orders` SET order_status = %s, rec_trade_id = %s WHERE id = %s', (order_status, rec_trade_id, order_id))
 class Api_Orders(MethodView): 
   def get(self):
     # api: 取得訂單列表 (之後更新)
@@ -83,16 +82,19 @@ class Api_Orders(MethodView):
         raise TypeError('訂單建立失敗，買家資訊格式錯誤')
       else:
         order_number = f'{uuid.uuid4().hex}{datetime.now().strftime("%Y%m%d%H%M%S")}'
-        insert_order_and_details(order_number, user_state['result']['sub'], order)
+        insert_order_and_detail(order_number, user_state['result']['sub'], order)
         tappay_res = order_via_tappay(prime, order_number, order)
+        res = {
+          'number': tappay_res['order_number'],
+          'payment': { 'status': 0, 'message': '訂單建立成功，付款成功' }
+        }
         if tappay_res['status'] == 0:
-          update_order_status(0, user_state['result']['sub'])
-          return jsonify({ 'data': {
-            'number': tappay_res['order_number'],
-            'payment': { 'status': 0, 'message': '訂單建立成功，付款成功' }
-          } })
+          update_order_status(0, order_number, tappay_res['rec_trade_id'])
+          return jsonify({ 'data': res })
         else:
-          raise ValueError('訂單已成立，但付款失敗，請重新進行付款流程')
+          res['payment']['status'] = 1
+          res['payment']['message'] = '訂單建立成功，但尚未付款'
+          return jsonify({ 'data': res })
     except (TypeError, ValueError) as e:
       abort(400, description = abort_msg(e))
     except PermissionError as e:
