@@ -31,7 +31,7 @@ const postOrder = async({prime, order}, msgModalTrigger) => {
   const progressStartTime = new Date();
   const res = await ordersApi('POST', {prime, order});
   if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
-  if (res.ok) {
+  if (res.data) {
     const isAnimating = await animeProgressBar(progressStartTime);
     if(!isAnimating) {
       const thankyouPage = new URL('/thankyou', window.location.href);

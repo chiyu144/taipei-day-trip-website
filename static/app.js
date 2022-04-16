@@ -29,8 +29,6 @@ export const getUser = async(authModalTrigger, bookingNum) => {
     bookingNum.style.visibility = 'hidden';
     sessionStorage.setItem('member', '');
     isLogin = false;
-    const msgModalTrigger = document.querySelector('#trigger-msg-global');
-    showMsgModal(msgModalTrigger, `${res.message}`, member === 'expired' ? true : false);
   };
 };
 export const postUser = async({ userEmail, userPassword, userName }, inputElements) => {
