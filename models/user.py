@@ -55,7 +55,7 @@ class Api_User(MethodView):
           raise TypeError('註冊失敗，Email 格式不正確')
         if not password_validation(new_user_password):
           raise TypeError('註冊失敗，密碼須由 8 - 16 個英數字及至少 1 個特殊符號組成')
-        if not name_validation(name):
+        if not name_validation(new_user_name):
           raise TypeError('註冊失敗，請輸入中文真實姓名')
         else:
           signup_user(new_user_name, new_user_email, new_user_password)
