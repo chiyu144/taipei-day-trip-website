@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const attraction = document.createElement('div');
       attraction.classList.add('attraction', 'col-xs-12', 'col-md-6', 'col-lg-4', 'col-3', 'col');
       if(index === attractions.data.length - 1) { attraction.style.marginRight = 'auto'; };
-      if(index === 0) { attraction.classList.add('run-fade-in-index'); };
+      if(index === 0) { attraction.classList.add('run-fade-in-fast'); };
       const link = document.createElement('a');
       link.classList.add('link-attraction');
       link.href = `./attraction/${id}`;
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }, { threshold: [0.98] });
 
-  animateArrayItems(rowAttractions, 'fade-in', 'run-fade-in-index');
+  animateArrayItems(rowAttractions, 'fade-in', 'run-fade-in-fast');
   render(attractions);
   footerIO.observe(footer);
   formSearchAttractions.addEventListener('submit', searchAttractions);

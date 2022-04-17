@@ -113,6 +113,7 @@ nav {
   padding-bottom: 25px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 footer {
   display: flex;
@@ -158,8 +159,8 @@ footer {
   width: 0%;
   background: linear-gradient(270deg, var(--color-cyan-800) 0%, var(--color-cyan-100) 100%);
 }
-.run-fade-in-index { animation: fade-in .15s ease-in; }
-.run-fade-in-booking { animation: fade-in .2s ease-in; }
+.run-fade-in-fast { animation: fade-in .15s ease-in; }
+.run-fade-in-slow { animation: fade-in .2s ease-in; }
 .tpfield {
   height: 38px;
   width: 220px;

@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async() => {
         colRight.appendChild(cancelBooking);
 
         const row = document.createElement('div');
-        if (index === 0) { row.classList.add('run-fade-in-booking'); };
+        if (index === 0) { row.classList.add('run-fade-in-slow'); };
         row.classList.add('row', 'row-booking');
         row.appendChild(colLeft);
         row.appendChild(colRight);
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     loader.style.display = 'none';
   };
 
-  animateArrayItems(bookingGrid, 'fade-in', 'run-fade-in-booking');
+  animateArrayItems(bookingGrid, 'fade-in', 'run-fade-in-slow');
   render(bookings);
 
   const validationTypes = ['name', 'email', 'phone'];
