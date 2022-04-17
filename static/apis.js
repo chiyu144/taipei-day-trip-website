@@ -77,9 +77,9 @@ export const ordersApi = async(method, bodyObj = undefined) => {
     console.warn(err);
   };
 };
-export const orderDetailApi = async(number) => {
+export const getOrderDetailApi = async(number) => {
   try {
-    const apiUrl = new URL(`/api/orders/${number}`, host);
+    const apiUrl = new URL(`/api/order/${number}`, host);
     const res = await fetch(apiUrl.toString(), {
       method: 'GET',
       headers: apiHeaders

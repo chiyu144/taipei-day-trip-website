@@ -3,7 +3,32 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style_thankyou.css') }}">
 {% endblock %}
 {% block body %}
-  <div>Thank You</div>
+  <div id="container-thankyou" class="container">
+    <div id="wrap-order-brief">
+      <div id="success-order-brief">
+        <img src="/static/image/icon_success.svg">
+      </div>
+      <div id="title-order-brief">行程預定成功！您的預定單號：</div>
+      <div id="number-order-brief"></div>
+      <div id="msg-order-brief">若想查看詳細的預定內容，可至 <a>會員中心</a> 進行相關操作。</div>
+      <button type="button" class="button-cyan button-thankyou">回首頁</button>
+    </div>
+    <div id="failed-order-brief">There's something wrong.</div>
+  </div>
+  <div id="wrap-waves">
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(102, 170, 187, 0.1)" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(102, 170, 187, 0.3)" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(102, 170, 187, 0.5)" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(102, 170, 187, 0.9)" />
+      </g>
+    </svg>
+  </div>
 {% endblock %}
 {% block script %}
   <script type="module" src="{{ url_for('static', filename='thankyou.js') }}"></script>
