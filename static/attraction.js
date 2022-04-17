@@ -1,11 +1,8 @@
 import { getAttractionSpotApi, bookingApi } from './apis.js';
 import { onImgLoaded, Carousel, showMsgModal } from './utils.js';
 
-let attractionUrl = new URL(window.location);
-let id = attractionUrl.pathname.split('/')[2];
-
-const getAttractionSpot = async(id) => {
-  const data = await getAttractionSpotApi(id);
+const getAttractionSpot = async(spotId) => {
+  const data = await getAttractionSpotApi(spotId);
   return data;
 };
 const postBooking = async({ attractionId, date, time, price }, msgModalTrigger) => {
@@ -15,20 +12,22 @@ const postBooking = async({ attractionId, date, time, price }, msgModalTrigger) 
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const detail = await getAttractionSpot(id);
-  const carousel = document.querySelector('#carousel-detail > .carousel');
-  const wrapIndicator = document.querySelector('#carousel-detail > .wrap-indicator');
-  const detailSkeletons = document.querySelectorAll('.detail-skeleton');
-  const infoDetails = document.querySelectorAll('.info-detail');
-  const formBooking = document.querySelector('#form-booking');
-  const dateBooking = formBooking.querySelector('#date-booking');
-  const radioBookings = formBooking.querySelectorAll('input[type="radio"]');
-  const msgGuideFee = document.querySelector('#msg-guide-fee');
+  const attractionUrl = new URL(window.location);
+  const spotId = attractionUrl.pathname.split('/')[2];
+  const spotDetails = await getAttractionSpot(spotId);
+  const carousel = document.querySelector('#carousel-spot > .carousel');
+  const wrapIndicator = document.querySelector('#carousel-spot > .wrap-indicator');
+  const spotSkeletons = document.querySelectorAll('.spot-skeleton');
+  const spotInfos = document.querySelectorAll('.info-spot');
+  const bookingForm = document.querySelector('#form-booking');
+  const bookingDate = bookingForm.querySelector('#date-booking');
+  const bookingRadios = bookingForm.querySelectorAll('input[type="radio"]');
+  const guideFeeMsg = document.querySelector('#msg-guide-fee');
   const msgModalTrigger = document.querySelector('#trigger-msg-attraction');
 
   const render = () => {
-    if(detail.data?.length > 0) {
-      detail.data.forEach(({name, category, mrt, description, address, transport, images}) => {
+    if(spotDetails.data?.length > 0) {
+      spotDetails.data.forEach(({name, category, mrt, description, address, transport, images}) => {
         images.forEach((image, index) => {
           const slide = document.createElement('div');
           slide.classList.add('slide');
@@ -48,23 +47,23 @@ document.addEventListener('DOMContentLoaded', async () => {
           carousel.appendChild(slide);
           wrapIndicator.appendChild(indicatorButton);
         });
-        infoDetails[0].textContent = name;
-        infoDetails[1].textContent = `${category} at ${mrt}`;
-        infoDetails[2].textContent = description;
-        infoDetails[3].textContent = address;
-        infoDetails[4].textContent = transport;
+        spotInfos[0].textContent = name;
+        spotInfos[1].textContent = `${category} at ${mrt}`;
+        spotInfos[2].textContent = description;
+        spotInfos[3].textContent = address;
+        spotInfos[4].textContent = transport;
       });
-      detailSkeletons.forEach(detailSkeleton => {
-        detailSkeleton.style.display = 'none';
+      spotSkeletons.forEach(spotSkeleton => {
+        spotSkeleton.style.display = 'none';
       });
-      infoDetails.forEach(detailInfo => {
+      spotInfos.forEach(detailInfo => {
         detailInfo.style.opacity = 1;
       });
-    }
-    radioBookings.forEach(radio => {
+    };
+    bookingRadios.forEach(radio => {
       radio.addEventListener('change', () => {
         if(radio.checked){
-          msgGuideFee.textContent = radio.id === 'morning' ? '2000' : '2500';
+          guideFeeMsg.textContent = radio.id === 'morning' ? '2000' : '2500';
         }
       });
     });
@@ -73,14 +72,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     console.log();
     if (sessionStorage.getItem('member') !== '') {
-      if (dateBooking.value === '') {
+      if (bookingDate.value === '') {
         showMsgModal(msgModalTrigger, '請選擇正確日期。');
       } else {
         await postBooking({
-          attractionId: detail.data[0].id,
-          date: dateBooking.value,
-          time: formBooking.querySelector('input[name=radio-booking]:checked').id,
-          price: parseInt(msgGuideFee.textContent),
+          attractionId: spotDetails.data[0].id,
+          date: bookingDate.value,
+          time: bookingForm.querySelector('input[name=radio-booking]:checked').id,
+          price: parseInt(guideFeeMsg.textContent),
         }, msgModalTrigger);
       }
     } else {
@@ -90,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   render();
   const today = new Date().toLocaleDateString('en-CA');
-  dateBooking.setAttribute('min', today);
-  formBooking.addEventListener('submit', booking);
-  new Carousel('carousel-detail').init();
+  bookingDate.setAttribute('min', today);
+  bookingForm.addEventListener('submit', booking);
+  new Carousel('carousel-spot').init();
 });

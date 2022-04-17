@@ -1,45 +1,45 @@
-.grid-detail-top {
+.grid-spot-top {
   padding: 0 15px;
 }
-.grid-detail-bottom {
+.grid-spot-bottom {
   padding: 0 10px;
 }
-.row-detail-top {
+.row-spot-top {
   flex-wrap: nowrap;
   margin-top: 37px;
   height: 406px;
 }
-.row-detail-bottom {
+.row-spot-bottom {
   justify-content: flex-start;
   margin: 0;
 }
-.col-detail-bottom {
+.col-spot-bottom {
   margin: 0 0 30px 0;
 }
-.spacer-detail {
+.spacer-spot {
   width: 65px;
   height: 65px;
   max-width: 65px;
   max-height: 65px;
 }
-.col-detail-bottom > div:last-child {
+.col-spot-bottom > div:last-child {
   margin-top: 10px;
 }
-.col-detail-left {
+.col-spot-left {
   flex-basis: 47%;
   margin-bottom: 0;
 }
-.col-detail-right {
+.col-spot-right {
   flex-basis: 53%;
   margin-bottom: 11px;
 }
-.hr-detail {
+.hr-spot {
   margin: 37px 0 50px 0;
 }
-.subtitle-detail {
+.subtitle-spot {
   font-weight: 700;
 }
-#carousel-detail {
+#carousel-spot {
   border-radius: 5px;
 }
 #form-booking {
@@ -67,16 +67,16 @@
   height: 36px;
   font-size: var(--font-size-md);
 }
-.detail-skeleton {
+.spot-skeleton {
   width: 50%;
   height: 24px;
   border-radius: 5px;
   background-color: var(--color-gray-50);
 }
-.grid-detail-bottom .detail-skeleton {
+.grid-spot-bottom .spot-skeleton {
   width: 100%;
 }
-.info-detail {
+.info-spot {
   opacity: 0;
   transition: opacity .2s ease-in;
 }
@@ -159,28 +159,28 @@
   transform: scale(0);
 }
 @media screen and (max-width: 854px) {
-  .grid-detail-top {
+  .grid-spot-top {
     padding: 0;
   }
-  .grid-detail-bottom {
+  .grid-spot-bottom {
     padding: 0 20px;
   }
-  .row-detail-top {
+  .row-spot-top {
     flex-wrap: wrap;
     height: auto;
   }
-  .col-detail-top.col-detail-left {
+  .col-spot-top.col-spot-left {
     height: 350px;
   }
-  .col-detail-top.col-detail-right {
+  .col-spot-top.col-spot-right {
     margin-top: 20px;
     height: fit-content;
     padding: 0 10px;
   }
-  .hr-detail {
+  .hr-spot {
     margin: 40px 10px 50px 10px;
   }
-  #carousel-detail {
+  #carousel-spot {
     border-radius: 0;
   }
   #form-booking > div:nth-child(5) > div:last-child {
@@ -189,7 +189,7 @@
   #form-booking > div:nth-child(5) > div:last-child > .button-booking {
     margin: 10px 0 0 0;
   }
-  .spacer-detail {
+  .spacer-spot {
     width: 55px;
     height: 55px;
     max-width: 55px;
@@ -197,7 +197,7 @@
   }
 }
 @media screen and (max-width: 737px) {
-  .row-detail-top {
+  .row-spot-top {
     margin-top: 0;
   }
 }

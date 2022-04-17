@@ -9,7 +9,6 @@ const getOrderDetail = async(orderNumber) => {
 document.addEventListener('DOMContentLoaded', async() => {
   const orderNumber = new URL(window.location.href).searchParams.get('number');
   const orderDetail = await getOrderDetail(orderNumber);
-  console.log(orderDetail)
   const orderBriefWrap = document.querySelector('#wrap-order-brief');
   const orderBriefFailed = document.querySelector('#failed-order-brief');
   const orderBriefNumber = document.querySelector('#number-order-brief');

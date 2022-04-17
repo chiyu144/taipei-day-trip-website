@@ -1,7 +1,7 @@
 import { userApi } from './apis.js'
 import {
   checkUserState, inputValidation, checkClassExist, clearInputInvalidAll,
-  addInputInvalidAll, showMsgModal } from './utils.js'
+  addInputInvalidAll } from './utils.js'
 
 let isLogin = false;
 
