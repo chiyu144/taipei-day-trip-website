@@ -4,11 +4,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style_carousel.css') }}">
 {% endblock %}
 {% block body %}
-  <div id="container-detail" class="container">
-    <div class="grid grid-detail-top">
-      <div class="row row-detail-top">
-        <div class="col-md-12 col col-detail col-detail-top col-detail-left">
-          <div id="carousel-detail" class="wrap-carousel">
+  <div id="container-spot" class="container">
+    <div class="grid grid-spot-top">
+      <div class="row row-spot-top">
+        <div class="col-md-12 col col-spot col-spot-top col-spot-left">
+          <div id="carousel-spot" class="wrap-carousel skeleton">
             <div class="carousel">
               <!-- slides -->
             </div>
@@ -23,23 +23,23 @@
             </div>
           </div>
         </div>
-        <div class="col-md-12 col col-detail col-detail-top col-detail-right">
+        <div class="col-md-12 col col-spot col-spot-top col-spot-right">
           <form id="form-booking">
-            <div class="detail-skeleton skeleton"></div>
-            <div class="info-detail"></div>
-            <div class="detail-skeleton skeleton"></div>
-            <div class="info-detail"></div>
+            <div class="spot-skeleton skeleton"></div>
+            <div class="info-spot"></div>
+            <div class="spot-skeleton skeleton"></div>
+            <div class="info-spot"></div>
             <div>
-              <div class="subtitle-detail">訂閱導覽行程</div>
+              <div class="subtitle-spot">訂閱導覽行程</div>
               <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
               <div>
-                <span class="subtitle-detail">選擇日期：</span>
+                <span class="subtitle-spot">選擇日期：</span>
                 <label for="date-booking">
                   <input type="date" name="date-booking" id="date-booking" max="2099-12-31"/>
                 </label>
               </div>
               <div>
-                <span class="subtitle-detail">選擇時間：</span>
+                <span class="subtitle-spot">選擇時間：</span>
                 <input type="radio" name="radio-booking" id="morning" checked/>
                 <label for="morning">
                   上半天
@@ -50,7 +50,7 @@
                 </label>
               </div>
               <div>
-                <span class="subtitle-detail">導覽費用：</span>
+                <span class="subtitle-spot">導覽費用：</span>
                 新台幣 <span id="msg-guide-fee">2000</span> 元
               </div>
               <div>
@@ -62,29 +62,29 @@
         </div>
       </div>
     </div>
-    <hr class="hr-detail"/>
-    <div class="grid grid-detail-bottom">
-      <div class="row row-detail-bottom">
-        <div class="col col-detail col-detail-bottom">
-          <div class="detail-skeleton skeleton"></div>
-          <div class="info-detail"></div>
+    <hr class="hr-spot"/>
+    <div class="grid grid-spot-bottom">
+      <div class="row row-spot-bottom">
+        <div class="col col-spot col-spot-bottom">
+          <div class="spot-skeleton skeleton"></div>
+          <div class="info-spot"></div>
         </div>
       </div>
-      <div class="row row-detail-bottom">
-        <div class="col col-detail col-detail-bottom">
-          <div class="subtitle-detail">景點地址：</div>
-          <div class="detail-skeleton skeleton"></div>
-          <div class="info-detail"></div>
+      <div class="row row-spot-bottom">
+        <div class="col col-spot col-spot-bottom">
+          <div class="subtitle-spot">景點地址：</div>
+          <div class="spot-skeleton skeleton"></div>
+          <div class="info-spot"></div>
         </div>
       </div>
-      <div class="row row-detail-bottom">
-        <div class="col col-detail col-detail-bottom">
-          <div class="subtitle-detail">交通方式：</div>
-          <div class="detail-skeleton skeleton"></div>
-          <div class="info-detail"></div>
+      <div class="row row-spot-bottom">
+        <div class="col col-spot col-spot-bottom">
+          <div class="subtitle-spot">交通方式：</div>
+          <div class="spot-skeleton skeleton"></div>
+          <div class="info-spot"></div>
         </div>
-        <div class="spacer-detail"></div>
       </div>
+      <div class="spacer-spot"></div>
     </div>
   </div>
 {% endblock %}
