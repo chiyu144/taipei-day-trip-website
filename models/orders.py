@@ -51,7 +51,6 @@ def insert_order_and_detail(cursor, order_number, member_id, order):
     VALUES (%s, %s, %s, %s, %s, %s, %s)
   '''
   insert_value_detail = order_detail(order_number, order['trip'])
-  print(insert_value_detail)
   cursor.execute(insert_sql_order, insert_value_order)
   cursor.executemany(insert_sql_detail, insert_value_detail)
   cursor.execute('DELETE FROM booking WHERE booking.member_id = %s', (member_id, ))
