@@ -1,6 +1,7 @@
-from flask import Blueprint, abort, jsonify
+from flask import Blueprint, abort, jsonify, request
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
+from utils.check_user_state import check_user_state
 
 bp_m_order_detail = Blueprint('m_order_detail', __name__)
 
@@ -51,8 +52,15 @@ def query_order_detail(cursor, order_id):
 @bp_m_order_detail.route('/order/<number>', methods=['GET'])
 def api_order_detail(number):
   try:
-    result = query_order_detail(number)
-    return jsonify({'data': [result] })
+    jwt_cookie = request.cookies.get('jwt')
+    user_state = check_user_state(jwt_cookie)
+    if user_state['error']:
+      raise PermissionError('取得預定資訊失敗，已登出，請重新登入')
+    else:
+      result = query_order_detail(number)
+      return jsonify({'data': [result] })
+  except PermissionError as e:
+    abort(403, description = abort_msg(e))
   except TypeError as e:
     abort(400, description=abort_msg(e, 'Order number is incorrect.'))
   except Exception as e:
