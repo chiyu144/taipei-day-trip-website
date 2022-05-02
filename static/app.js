@@ -16,9 +16,11 @@ const clearAuthMsg = () => {
   authMsg.classList.contains('sentinel-auth') && authMsg.classList.remove('sentinel-auth');
 };
 
-export const getUser = async(authModalTrigger, bookingNum) => {
+export const getUser = async(authModalTrigger, bookingNum, memberNav) => {
   const member = await checkUserState();
-  if (member && member !== 'expired') {    
+  if (member && member !== 'expired') {
+    memberNav.style.display = 'inline-block';
+    memberNav.textContent = `${member.sub_name[0]}`;
     authModalTrigger.textContent = '登出系統';
     bookingNum.textContent = member.booking_num;
     bookingNum.style.visibility = 'visible';
@@ -78,11 +80,12 @@ window.addEventListener('load', async() => {
   const authModalTrigger = document.querySelector('#trigger-auth');
   const modalTriggers = document.querySelectorAll('[data-modal]');
   const bookingNum = document.querySelector('#nav-booking-num');
+  const memberNav = document.querySelector('#nav-member');
   const emailInput = document.querySelector('#user-email');
   const passwordInput = document.querySelector('#user-password');
   const nameInput = document.querySelector('#user-name');
   
-  await getUser(authModalTrigger, bookingNum);
+  await getUser(authModalTrigger, bookingNum, memberNav);
 
   bookingNav.addEventListener('click', async(e) => {
     e.preventDefault();
