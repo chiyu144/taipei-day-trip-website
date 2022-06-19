@@ -1,10 +1,12 @@
 /* --- CSS variables --- */
 :root {
-  --font-size-xs: 16px;
+  --font-size-xs: 12px;
+  --font-size-sm: 16px;
   --font-size-md: 19px;
   --font-size-lg: 24px;
   --font-size-slogan: 28px;
   --font-size-header: 30px;
+  --font-size-modal: 18px;
   --color-cyan-800: #448899;
   --color-cyan-700: #66aabb;
   --color-cyan-100: #aaddee;
@@ -15,7 +17,7 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-text-shadow: #aabbcc;
-  --color-error: #cc4b4b;
+  --color-error: #e72727;
 }
 /* --- My custom CSS reset --- */
 *, *::before, *::after {
@@ -30,7 +32,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   background-color: var(--color-white);
   color: var(--color-gray-800);
 }
@@ -70,8 +72,51 @@ nav {
   align-items: center;
   padding: 5px 0;
 }
-#nav-bar > div > a { cursor: pointer; }
-#nav-bar > div > a:first-child { margin-right: 15px; }
+#nav-bar a { cursor: pointer; }
+#trigger-auth {
+  min-width: 64px;
+  transition: color .2s ease;
+}
+.trigger-msg { display: none; }
+#wrap-nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+} 
+#nav-member {
+  display: none;
+  width: 30px;
+  height: 30px;
+  background-color: var(--color-cyan-700);
+  color: var(--color-white);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+}
+#nav-booking {
+  width: 75px;
+  position: relative;
+  transition: color .2s ease;
+}
+#trigger-auth:hover, #nav-booking:hover { color: var(--color-cyan-700); }
+#nav-member:hover { color: var(--color-gray-300); }
+@keyframes scale { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+#nav-booking-num {
+  border-radius: 50%;
+  background-color: var(--color-cyan-800);
+  color: var(--color-white);
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  bottom: -4px; right: -3px;
+  border: 1px solid var(--color-cyan-100);
+  text-align: center;
+  line-height: 1.2;
+  font-size: var(--font-size-xs);
+  animation: scale .3s ease;
+  visibility: hidden;
+}
 #nav-logo {
   color: var(--color-cyan-800);
   font-weight: 700;
@@ -85,6 +130,7 @@ nav {
   padding-bottom: 25px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 footer {
   display: flex;
@@ -106,6 +152,7 @@ footer {
   transform: translate(-50%, -50%);
 }
 .msg-hint { padding: 0 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .loader {
   width: 50px;
   height: 50px;
@@ -114,7 +161,7 @@ footer {
   border-top-color: var(--color-white);
   animation: spin 1s ease-in-out infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shimmer { 100% { -webkit-mask-position:left } }
 .skeleton {
   color: var(--color-gray-800);
   display: inline-block;
@@ -123,7 +170,45 @@ footer {
   animation: shimmer 1s infinite;
   background-color: var(--color-gray-300);
 }
-@keyframes shimmer { 100% { -webkit-mask-position:left } }
+@keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+#progress-bar {
+  flex: 0 0 12px;
+  width: 0%;
+  background: linear-gradient(270deg, var(--color-cyan-800) 0%, var(--color-cyan-100) 100%);
+}
+.run-fade-in-fast { animation: fade-in .15s ease-in; }
+.run-fade-in-slow { animation: fade-in .2s ease-in; }
+.tpfield {
+  height: 38px;
+  width: 220px;
+  border: 1px solid;
+  border-color: var(--color-gray-300);
+  padding: 6px 10px;
+  border-radius: 5px;
+  transition: border-color .2s ease;
+  outline: 0;
+}
+.tappay-field-focus {
+  border-color: var(--color-cyan-800);
+}
+.field { position: relative; }
+.input-icon {
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 2px);
+  width: 22px; height: 22px;
+  transform: scale(0);
+  transition: transform .1s ease-in;
+  border-radius: 50%;
+  background-color: var(--color-white);
+}
+.input-icon > img {
+  filter: invert(42%) sepia(97%) saturate(5375%) hue-rotate(352deg) brightness(86%) contrast(109%);
+}
+.input-icon-invalid { transform: scale(1); }
+.input-invalid {
+  border-color: var(--color-error) !important;
+}
 /* --- My Custom Grid System --- */
 .container {
   width: 100%;

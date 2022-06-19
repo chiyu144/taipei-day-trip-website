@@ -45,19 +45,24 @@
   cursor: pointer;
 }
 /* Modal: Auth's CSS */
-#modal-auth  #form-auth > div:first-child {
+#modal-auth  #form-auth > div:first-child, #title-modal-msg {
   font-size: var(--font-size-lg);
   font-weight: 700;
   text-align: center;
-  margin-bottom: 15px;
-}
-#modal-auth  #form-auth label { display: none; }
-#modal-auth  #form-auth input, #modal-auth #form-auth > button {
-  height: 47px;
-  width: 100%;
   margin-bottom: 10px;
 }
-#modal-auth  #form-auth input {
+#modal-auth #form-auth label {
+  font-size: var(--font-size-xs);
+}
+#modal-auth #form-auth input, #modal-auth #form-auth > button {
+  height: 47px;
+  width: 100%;
+}
+#modal-auth #form-auth button {
+  margin: 10px 0 18px 0;
+}
+#modal-auth #form-auth input {
+  margin: 5px 0 10px 0;
   border-radius: 5px;
   border: 1px solid #cccccc;
   text-indent: 15px;
@@ -67,14 +72,13 @@
 #modal-auth  #form-auth input:focus {
   border: 1px solid var(--color-cyan-800);
 }
-.field-user-name {
-  height: 0;
-  margin-bottom: 0;
+.wrap-field {
+  overflow: hidden;
+  height: calc(86px * 2);
   transition: height .2s ease;
 }
-.anime-field-user-name {
-  height: 47px;
-  margin-bottom: 10px;
+.anime-wrap-field {
+  height: calc(86px * 3);
 }
 .msg-auth {
   color: var(--color-error);
@@ -82,7 +86,8 @@
 .sentinel-auth {
   height: 22px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: var(--font-size-xs);
 }
 #toggle-auth {
   text-align: center;
@@ -90,6 +95,17 @@
 #modal-auth #toggle-auth > a {
   text-decoration: underline;
   cursor: pointer;
+}
+#content-modal-msg {
+  margin: 16px 0;
+  text-align: center;
+  font-size: var(--font-size-modal);
+}
+#button-modal-msg {
+  width: 75px;
+  height: 36px;
+  display: block;
+  margin: 0 auto;
 }
 @media screen and (max-width: 480px) {
   .container-modal {

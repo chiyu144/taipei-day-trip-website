@@ -13,6 +13,7 @@ def with_cnx(need_commit = None):
         if need_commit:
           cnx.commit()
       except Error as e:
+        cnx.rollback()
         abort(500, description=f'Exception raise in utils/with_cnx: {e}')
       finally:
         cursor.close()

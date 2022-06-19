@@ -1,66 +1,180 @@
-import { bookingApi } from './apis.js';
-import { onImgLoaded, checkUserState, ntdDisplay } from './utils.js'
+import { bookingApi, ordersApi } from './apis.js';
+import {
+  onImgLoaded, ntdDisplay, animateArrayItems, checkBookingNum,
+  checkClassExist, inputValidation, showMsgModal, addInputInvalidAll,
+  animeProgressBar
+} from './utils.js'
+import { tappaySetup, tappayValidation } from './tappay.js'
+
+let bookings = [];
+let orderTotalPrice = 0;
 
 const getBooking = async() => {
   const res = await bookingApi('GET')
-  if (res?.error) { window.location.href = '/'; };
+  if (res.error) { window.location.href = '/'; };
   return res.data;
 };
-const deleteBooking = async(attractionId) => {
+const deleteBooking = async(attractionId, reRender, msgModalTrigger) => {
   const res = await bookingApi('DELETE', undefined, attractionId);
-  if (res?.error) { window.location.href = '/'; };
-  if (res?.ok) { window.location.reload(); };
+  if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
+  if (res.ok) { 
+    orderTotalPrice = 0;
+    bookings = await getBooking();
+    const rows = document.querySelectorAll('.row-booking');
+    const bookingNum = document.querySelector('#nav-booking-num');    
+    rows.forEach(row => row.remove());
+    bookingNum.textContent = await checkBookingNum();
+    reRender(bookings);
+  };
+};
+const postOrder = async({prime, order}, msgModalTrigger) => {
+  const progressStartTime = new Date();
+  const res = await ordersApi('POST', {prime, order});
+  if (res.error) { showMsgModal(msgModalTrigger, `${res.message}`, res.status === 403 ? true : false); };
+  if (res.data) {
+    const isAnimating = await animeProgressBar(progressStartTime);
+    if(!isAnimating) {
+      const thankyouPage = new URL('/thankyou', window.location.href);
+      thankyouPage.searchParams.append('number', res.data.number);
+      window.location.href = thankyouPage.toString();
+    };
+  };
 };
 
 document.addEventListener('DOMContentLoaded', async() => {
-  if (!await checkUserState()) { window.location.href = '/'; };
-  const booking = await getBooking();
-  const noBooking = document.querySelector('div[name="no-booking"]');
-  const hasBooking = document.querySelector('div[name="has-booking"]');
-  const infoBookings = document.querySelectorAll('.info-booking');
-  const thumbnail = document.querySelector('.thumbnail-booking'); 
+  bookings = await getBooking();
+  const bookingGrid = document.querySelector('.grid-booking');
   const memberNames = document.querySelectorAll('.member-name');
-  const attractionName = infoBookings[0].querySelector('span:last-of-type');
-  const bookingDate = infoBookings[1].querySelector('span:last-of-type');
-  const bookingTime = infoBookings[2].querySelector('span:last-of-type');
-  const bookingFee = infoBookings[3].querySelector('span:last-of-type');
-  const bookingAddr = infoBookings[4].querySelector('span:last-of-type');
-  const cancellation = document.querySelector('.cancellation-booking');
   const bookingPrice = document.querySelector('#price-booking > span');
   const orderForm = document.querySelector('#form-order');
+  const orderInputs = document.querySelectorAll('#form-order input');
+  const tappayFields = document.querySelectorAll('#form-order .tpfield');
   const loader = document.querySelector('.wrap-center');
+  const noBookingMsg = document.querySelector('.msg-no-booking');
+  const msgModalTrigger = document.querySelector('#trigger-msg-booking');
   
-  const render = () => {
-    loader.style.display = 'none';
+  const render = bookings => {
     memberNames.forEach(memberName => {
       memberName.textContent = JSON.parse(sessionStorage.getItem('member'))['sub_name']; 
     }) 
-    if(booking?.length > 0) {
-      booking.forEach(({ attraction, date, price, time }) => {
+    if(bookings?.length > 0) {
+      const fragment = document.createDocumentFragment();
+      const infoKeys = ['台北一日遊', '日期', '時間', '費用', '地點'];
+
+      bookings.forEach(({ attraction, date, price, time }, index) => {  
+        const thumbnail = document.createElement('img');
+        thumbnail.classList.add('thumbnail-booking');
         thumbnail.src = attraction?.image;
         onImgLoaded(thumbnail);
-        attractionName.textContent = attraction?.name;
-        bookingDate.textContent = new Date(date).toISOString().split('T')[0];
-        bookingTime.textContent = time === 'morning' ? '早上 9 點到下午 4 點' : '下午 4 點到晚上 9 點';
-        bookingFee.textContent = ntdDisplay(price);
-        bookingAddr.textContent = attraction?.address;
-        cancellation.setAttribute('data-attraction-id', attraction?.id);
-        cancellation.addEventListener('click', async(e) => {
-          const attractionId = e.currentTarget.getAttribute('data-attraction-id');
-          await deleteBooking(attractionId);
+        const wrapThumbnail = document.createElement('div');
+        wrapThumbnail.classList.add('wrap-thumbnail-booking');
+        wrapThumbnail.appendChild(thumbnail);
+        const colLeft = document.createElement('div');
+        colLeft.classList.add('col-md-12', 'col', 'col-booking', 'col-booking-left');
+        colLeft.appendChild(wrapThumbnail);
+
+        const colRight = document.createElement('div');
+        colRight.classList.add('col-md-12', 'col', 'col-booking', 'col-booking-right');
+
+        const infoValues = [
+          attraction?.name,
+          new Date(date).toLocaleDateString('en-CA'),
+          time === 'morning' ? '早上 9 點到下午 4 點' : '下午 1 點到晚上 8 點',
+          ntdDisplay(Math.trunc(price)),
+          attraction?.address
+        ];
+
+        infoKeys.forEach((key, index) => {
+          const infoTitle = document.createElement('span');
+          infoTitle.textContent = `${key + '：'}`;
+          const infoDesc = document.createElement('span');
+          infoDesc.textContent = infoValues[index];
+          const infoBooking = document.createElement('div');
+          infoBooking.classList.add('info-booking');
+          infoBooking.appendChild(infoTitle);
+          infoBooking.appendChild(infoDesc);
+          colRight.appendChild(infoBooking);
         });
+
+        const iconDelete = document.createElement('img');
+        iconDelete.src = '/static/image/icon_delete.png';
+        const cancelBooking = document.createElement('div');
+        cancelBooking.classList.add('cancel-booking');
+        cancelBooking.setAttribute('data-attraction-id', attraction?.id);
+        cancelBooking.addEventListener('click', async(e) => {
+          const attractionId = e.currentTarget.getAttribute('data-attraction-id');
+          await deleteBooking(attractionId, render, msgModalTrigger);
+        });
+        cancelBooking.appendChild(iconDelete);
+        colRight.appendChild(cancelBooking);
+
+        const row = document.createElement('div');
+        if (index === 0) { row.classList.add('run-fade-in-slow'); };
+        row.classList.add('row', 'row-booking');
+        row.appendChild(colLeft);
+        row.appendChild(colRight);
+
+        fragment.appendChild(row);
+        orderTotalPrice += parseFloat(price);
       });
-      bookingPrice.textContent = ntdDisplay(booking[0].price);
-      noBooking.style.display = 'none';
-      hasBooking.style.display = 'block';
+      bookingGrid.appendChild(fragment);
+      noBookingMsg.style.display = 'none';
+      orderForm.style.display = 'block';
     } else {
-      noBooking.style.display = 'block';
-      hasBooking.style.display = 'none';
+      noBookingMsg.style.display = 'block';
+      orderForm.style.display = 'none';
+      orderTotalPrice = 0;
     }
+    bookingPrice.textContent = ntdDisplay(Math.trunc(orderTotalPrice));
+    loader.style.display = 'none';
   };
 
-  render();
+  animateArrayItems(bookingGrid, 'fade-in', 'run-fade-in-slow');
+  render(bookings);
+
+  const validationTypes = ['name', 'email', 'phone'];
+  orderInputs.forEach((orderInput, index) => {
+    orderInput.addEventListener('keyup', e => {
+      checkClassExist(e.currentTarget, 'input-invalid') && e.currentTarget.classList.remove('input-invalid');
+      checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') && e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
+    });
+    orderInput.addEventListener('blur', e => inputValidation(validationTypes[index], e.currentTarget, e.currentTarget.value));
+  });
+  tappaySetup();
+  tappayValidation(tappayFields);
+
   orderForm.addEventListener('submit', e => {
     e.preventDefault();
-  })
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+    const formData = new FormData(e.target);
+    const buyerName =  formData.get('buyer-name');
+    const buyerEmail = formData.get('buyer-email');
+    const buyerPhone = formData.get('buyer-phone');
+    if (tappayStatus.canGetPrime === false || buyerName === '' || buyerEmail === '' || buyerPhone === '') {
+      orderInputs.forEach((orderInput, index) => inputValidation(validationTypes[index], orderInput, orderInput.value));
+      addInputInvalidAll(tappayFields);
+      showMsgModal(msgModalTrigger, '請填寫完整的正確資訊。');
+      return;
+    };
+    TPDirect.card.getPrime(async(result) => {
+      if (result.status !== 0) {
+        addInputInvalidAll(tappayFields);
+        showMsgModal(msgModalTrigger, `${result.msg}`);
+        return;
+      };
+      await postOrder({
+        prime: result.card.prime,
+        order: {
+          price: orderTotalPrice,
+          trip: bookings.map(({price, date, ...booking}) => ({date: new Date(date).toLocaleDateString('en-CA'), ...booking})),
+          contact: {
+            name: buyerName,
+            email: buyerEmail,
+            phone: buyerPhone
+          }
+        }
+      }, msgModalTrigger);
+    });
+    
+  });
 });

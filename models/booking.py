@@ -1,24 +1,15 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, request, abort, jsonify
 from flask.views import MethodView
 from utils.check_user_state import check_user_state
 from utils.with_cnx import with_cnx
 from utils.abort_msg import abort_msg
+from utils.input_validation import date_validation
 
 bp_m_booking = Blueprint('m_booking', __name__)
 
-# 檢查日期是否正確
-def valid_date(date):
-  try:
-    if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
-      raise ValueError
-    return True
-  except ValueError:
-    return False
-
 # 取得行程
-# 目前資料庫可存多筆 Booking 資料，但一個景點只能 Booking 一次，重複 Booking 相同景點會覆蓋為最新的那次
-# 但暫時只先撈一筆 (依更新時間，最新的一筆)，傳給前端 (因為還沒想好前端多筆的畫面 #)，之後再更新
+# 可存多筆 Booking 資料，但 1 個景點只能 Booking 1 次，重複 Booking 相同景點會覆蓋為最新的那次
 @with_cnx(need_commit = False)
 def query_booking(cursor, member_id):
   query_sql = '''
@@ -27,7 +18,6 @@ def query_booking(cursor, member_id):
     FROM booking INNER JOIN attractions ON attractions.id = booking.attraction_id
     WHERE member_id LIKE %s
     ORDER BY updated_time DESC
-    LIMIT 0, 1
   '''
   cursor.execute(query_sql, (member_id, ))
   columns = [col[0] for col in cursor.description]
@@ -42,14 +32,14 @@ def query_booking(cursor, member_id):
     booking_dct['price'] = booking[6]
     output.append(booking_dct)
   return output
-  
+
 # 預定行程
 @with_cnx(need_commit = True)
 def booking_schedule(cursor, member_id, attraction_id, date, time, price):
   cursor.execute('SELECT count(attraction_id) FROM booking WHERE member_id = %s AND attraction_id = %s', (member_id, attraction_id))
   if int(cursor.fetchone()[0]) > 0:
-    updated_time = datetime.utcnow().isoformat()
-    update_sql = 'UPDATE booking SET date = %s, time = %s, price = %s, updated_time = %s WHERE member_id = %s AND attraction_id = %s;'
+    updated_time = datetime.now(timezone.utc).astimezone().isoformat()
+    update_sql = 'UPDATE booking SET date = %s, time = %s, price = %s, updated_time = %s WHERE member_id = %s AND attraction_id = %s'
     update_value = (date, time, price, updated_time, member_id, attraction_id)
     cursor.execute(update_sql, update_value)
   else:
@@ -61,8 +51,8 @@ def booking_schedule(cursor, member_id, attraction_id, date, time, price):
 
 # 刪除行程
 @with_cnx(need_commit= True)
-def booking_cancellation(cursor, member_id, attraction_id):
-  cursor.execute('DELETE FROM booking WHERE member_id = %s', (member_id, ))
+def booking_cancel(cursor, member_id, attraction_id):
+  cursor.execute('DELETE FROM booking WHERE member_id = %s AND attraction_id = %s', (member_id, attraction_id))
 
 class Api_Booking(MethodView): 
   def get(self):
@@ -74,12 +64,13 @@ class Api_Booking(MethodView):
         raise PermissionError('取得行程資訊失敗，已登出，請重新登入')
       else:
         booking = query_booking(user_state['result']['sub'])
-        print(booking)
         if booking:
           return jsonify({ 'data': booking })
         else: return jsonify({ 'data': [] })
     except PermissionError as e:
       abort(403, description = abort_msg(e))
+    except Exception as e:
+      abort(500, description = abort_msg(e))
 
   def post(self):
     # api: 新增 1 筆 Booking
@@ -94,7 +85,7 @@ class Api_Booking(MethodView):
         raise PermissionError('預定行程失敗，已登出，請重新登入')
       elif not all((attraction_id, date, time, price)):
         raise TypeError('預定行程失敗，欄位皆不得為空')
-      elif not valid_date(date):
+      elif not date_validation(date):
         raise ValueError('預定行程失敗，日期格式錯誤')
       else:
         booking_schedule(user_state['result']['sub'], attraction_id, date, time, price)
@@ -115,8 +106,10 @@ class Api_Booking(MethodView):
         raise PermissionError('取得行程資訊失敗，已登出，請重新登入')
       else:
         attraction_id = request.args.get('id', type = int)
-        booking_cancellation(user_state['result']['sub'], attraction_id)
+        booking_cancel(user_state['result']['sub'], attraction_id)
         return jsonify({ 'ok': True })
+    except PermissionError as e:
+      abort(403, description = abort_msg(e))
     except Exception as e:
       abort(500, description = abort_msg(e))
 

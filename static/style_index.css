@@ -69,6 +69,7 @@
   border-radius: 5px;
   background-color: var(--color-white);
   overflow: hidden;
+  opacity: 0;
 }
 .link-attraction {
   display: block;
