@@ -6,7 +6,8 @@ bp_m_attractions = Blueprint('m_attractions', __name__)
 
 # API 旅遊景點 → 取得景點資料列表
 
-@with_cnx(need_commit = False)
+
+@with_cnx(need_commit=False)
 def query_attractions(cursor, page_unit, page, keyword):
   start_index = page * page_unit
   keyword_val = keyword if keyword else '%'
@@ -21,6 +22,7 @@ def query_attractions(cursor, page_unit, page, keyword):
   columns = [col[0] for col in cursor.description]
   attractions = [dict(zip(columns, row)) for row in cursor.fetchall()]
   return attractions
+
 
 @bp_m_attractions.route('/attractions', methods=['GET'])
 def api_attractions():

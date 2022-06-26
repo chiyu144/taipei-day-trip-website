@@ -2,13 +2,15 @@ import json
 from flask import current_app
 from mysql.connector import Error
 
+
 def attractions_values(attractions):
   values = []
   for row in attractions:
     columns = [row['_id'], row['stitle'], row['CAT2'], row['xbody'], row['address'],
-            row['info'], row['MRT'], row['latitude'], row['longitude'], row['MEMO_TIME']]
+               row['info'], row['MRT'], row['latitude'], row['longitude'], row['MEMO_TIME']]
     values.append(tuple(columns))
   return values
+
 
 def insert_attractions(attractions):
   cnx = current_app.db_cnx()
@@ -26,6 +28,7 @@ def insert_attractions(attractions):
     cursor.close()
     cnx.close()
 
+
 def attractions_imgs(attractions):
   img_urls = []
   for row in attractions:
@@ -36,6 +39,7 @@ def attractions_imgs(attractions):
       if file[-3:] == 'jpg' or file[-3:] == 'png':
         img_urls.append((row['_id'], files[index]))
   return img_urls
+
 
 def insert_attractions_imgs(attractions):
   cnx = current_app.db_cnx()
@@ -49,6 +53,7 @@ def insert_attractions_imgs(attractions):
   finally:
     cursor.close()
     cnx.close()
+
 
 def tpe_attractions(json_path):
   with open(f'{json_path}', encoding='utf-8') as input:
