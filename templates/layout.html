@@ -19,8 +19,12 @@
     <div class="container">
       <div id="nav-bar">
           <div id="nav-logo"><a href="/">台北一日遊</a></div>
-          <div>
-            <a id="nav-booking">預定行程</a>
+          <div id="wrap-nav-item">
+            <a id="nav-member" href="/member"></a>
+            <a id="nav-booking">
+              預定行程
+              <span id="nav-booking-num"></span>
+            </a>
             <a data-modal="modal-auth" id="trigger-auth"></a>
           </div>
       </div>
@@ -31,6 +35,7 @@
       <!-- Dynamic Content -->
     {% endblock %}
   </main>
+  <div id="progress-bar"></div>
   <footer>COPYRIGHT © 2021 台北一日遊</footer>
   <div class="modal" id="modal-auth">
     <div class="bg-modal exit-modal"></div>
@@ -38,17 +43,28 @@
       <div class="decorate-line-modal"></div>
       <form id="form-auth">
         <div>登入會員帳號</div>
-        <div>
-          <label for="user-email">帳號</label>
-          <input type="text" id="user-email" name="user-email" placeholder="輸入電子信箱">
-        </div>
-        <div>
-          <label for="user-password">密碼</label>
-          <input type="password" id="user-password" name="user-password" placeholder="輸入密碼">
-        </div>
-        <div class="field-user-name">
-          <label for="user-name">姓名</label>
-          <input type="text" id="user-name" name="user-name" placeholder="輸入姓名">
+        <div class="wrap-field">
+          <div class="field">
+            <label for="user-email">e.g. example@email.com</label>
+            <input type="text" id="user-email" name="user-email" placeholder="請輸入電子信箱">
+            <div class="input-icon">
+              <img src="/static/image/icon_error.svg">
+            </div>
+          </div>
+          <div class="field">
+            <label for="user-password">密碼須由 8 - 16 個英數字至少 1 個特殊符號組成</label>
+            <input type="password" id="user-password" name="user-password" placeholder="請輸入密碼">
+            <div class="input-icon">
+              <img src="/static/image/icon_error.svg">
+            </div>
+          </div>
+          <div class="field">
+            <label for="user-name">請填寫真實中文姓名</label>
+            <input type="text" id="user-name" name="user-name" placeholder="請輸入姓名">
+            <div class="input-icon">
+              <img src="/static/image/icon_error.svg">
+            </div>
+          </div>
         </div>
         <button type="submit" class="button-cyan">登入帳戶</button>
         <div class="sentinel msg-auth"></div>
@@ -57,6 +73,19 @@
           <a>點此註冊</a>
         </div>
       </form>
+      <div class="close-modal exit-modal">
+        <img src="/static/image/icon_close.png">
+      </div>
+    </div>
+  </div>
+  <a data-modal="modal-msg" class="trigger-msg" id="trigger-msg-global"></a>
+  <div class="modal" id="modal-msg">
+    <div class="bg-modal exit-modal"></div>
+    <div class="container-modal">
+      <div class="decorate-line-modal"></div>
+      <div id="title-modal-msg"></div>
+      <p id="content-modal-msg"></p>
+      <button type="button" id="button-modal-msg" class="button-cyan"></button>
       <div class="close-modal exit-modal">
         <img src="/static/image/icon_close.png">
       </div>
