@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style_member.css') }}">
+{% endblock %}
+{% block body %}
+  <div id="container-member" class="container">
+    Member Page
+  </div>
+{% endblock %}
+{% block script %}
+  <script type="module" src="{{ url_for('static', filename='member.js') }}"></script>
+{% endblock %}

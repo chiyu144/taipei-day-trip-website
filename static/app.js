@@ -1,14 +1,12 @@
-import { userApi } from './apis.js'
-import {
-  checkUserState, inputValidation, checkClassExist, clearInputInvalidAll,
-  addInputInvalidAll } from './utils.js'
+import { userApi } from './apis.js';
+import { checkUserState, inputValidation, checkClassExist, clearInputInvalidAll, addInputInvalidAll } from './utils.js';
 
 let isLogin = false;
 
 const showAuthMsg = (msg) => {
   const authMsg = document.querySelector('.msg-auth');
   !authMsg.classList.contains('sentinel-auth') && authMsg.classList.add('sentinel-auth');
-  authMsg.textContent = `${msg}`
+  authMsg.textContent = `${msg}`;
 };
 const clearAuthMsg = () => {
   const authMsg = document.querySelector('.msg-auth');
@@ -16,7 +14,7 @@ const clearAuthMsg = () => {
   authMsg.classList.contains('sentinel-auth') && authMsg.classList.remove('sentinel-auth');
 };
 
-export const getUser = async(authModalTrigger, bookingNum, memberNav) => {
+export const getUser = async (authModalTrigger, bookingNum, memberNav) => {
   const member = await checkUserState();
   if (member && member !== 'expired') {
     memberNav.style.display = 'inline-block';
@@ -31,44 +29,45 @@ export const getUser = async(authModalTrigger, bookingNum, memberNav) => {
     bookingNum.style.visibility = 'hidden';
     sessionStorage.setItem('member', '');
     isLogin = false;
-  };
+  }
 };
-export const postUser = async({ userEmail, userPassword, userName }, inputElements) => {
+export const postUser = async ({ userEmail, userPassword, userName }, inputElements) => {
   const res = await userApi('POST', {
     name: userName,
     email: userEmail,
-    password: userPassword
+    password: userPassword,
   });
   if (res.ok) {
     clearInputInvalidAll(inputElements);
     showAuthMsg('註冊成功，請重新登入');
-  };
+  }
   if (res.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
   }
 };
-export const patchUser = async({ userEmail, userPassword }, inputElements) => {
+export const patchUser = async ({ userEmail, userPassword }, inputElements) => {
   const res = await userApi('PATCH', {
     email: userEmail,
-    password: userPassword
+    password: userPassword,
   });
   if (res.ok) {
     clearInputInvalidAll(inputElements);
     window.location.reload();
-  };
+  }
   if (res.error) {
     showAuthMsg(res.message);
     addInputInvalidAll(inputElements);
-  };
+  }
 };
-export const deleteUser = async() => {
+export const deleteUser = async () => {
   const res = await userApi('DELETE');
-  if (res.ok) { window.location.reload(); };
+  if (res.ok) {
+    window.location.reload();
+  }
 };
 
-
-window.addEventListener('load', async() => {
+window.addEventListener('load', async () => {
   const bookingNav = document.querySelector('#nav-booking');
   const authForm = document.querySelector('#form-auth');
   const authFormTitle = authForm.querySelector('div:first-child');
@@ -84,27 +83,38 @@ window.addEventListener('load', async() => {
   const emailInput = document.querySelector('#user-email');
   const passwordInput = document.querySelector('#user-password');
   const nameInput = document.querySelector('#user-name');
-  
+
   await getUser(authModalTrigger, bookingNum, memberNav);
 
-  bookingNav.addEventListener('click', async(e) => {
+  bookingNav.addEventListener('click', async (e) => {
     e.preventDefault();
-    if(sessionStorage.getItem('member') !== '') {
+    if (sessionStorage.getItem('member') !== '') {
       window.location.href = '/booking';
     } else {
       authModalTrigger.click();
     }
   });
-  
-  modalTriggers.forEach(modalTrigger => {
-    modalTrigger.addEventListener('click', e => {
+
+  memberNav.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (sessionStorage.getItem('member') !== '') {
+      window.location.href = '/member';
+    } else {
+      authModalTrigger.click();
+    }
+  });
+
+  modalTriggers.forEach((modalTrigger) => {
+    modalTrigger.addEventListener('click', (e) => {
       e.preventDefault();
-      if (modalTrigger.id === 'trigger-auth' && isLogin) { return; }; 
+      if (modalTrigger.id === 'trigger-auth' && isLogin) {
+        return;
+      }
       const modal = document.getElementById(modalTrigger.dataset.modal);
       modal.classList.add('open-modal');
       const modalExits = modal.querySelectorAll('.exit-modal');
-      modalExits.forEach(modalExit => {
-        modalExit.addEventListener('click', e => {
+      modalExits.forEach((modalExit) => {
+        modalExit.addEventListener('click', (e) => {
           e.preventDefault();
           modal.classList.remove('open-modal');
           if (modalTrigger.id === 'trigger-auth') {
@@ -112,18 +122,18 @@ window.addEventListener('load', async() => {
             authForm.reset();
             const invalidElements = authForm.querySelectorAll('.input-invalid');
             clearInputInvalidAll(invalidElements);
-          };
+          }
         });
       });
     });
   });
 
-  authModalTrigger.addEventListener('click', async(e) => {
+  authModalTrigger.addEventListener('click', async (e) => {
     e.preventDefault();
-    isLogin && await deleteUser();
+    isLogin && (await deleteUser());
   });
 
-  authToggle?.addEventListener('click', e => {
+  authToggle?.addEventListener('click', (e) => {
     e.preventDefault();
     authFormTitle.textContent = authFormTitle.textContent === '登入會員帳號' ? '註冊會員帳號' : '登入會員帳號';
     authMsgToggle.textContent = authMsgToggle.textContent === '還沒有帳戶？' ? '已有帳戶？' : '還沒有帳戶？';
@@ -138,31 +148,36 @@ window.addEventListener('load', async() => {
 
   const validationTypes = ['email', 'password', 'name'];
   authInputs.forEach((authInput, index) => {
-    authInput.addEventListener('keyup', e => {
+    authInput.addEventListener('keyup', (e) => {
       checkClassExist(e.currentTarget, 'input-invalid') && e.currentTarget.classList.remove('input-invalid');
-      checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') && e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
+      checkClassExist(e.currentTarget.nextElementSibling, 'input-icon-invalid') &&
+        e.currentTarget.nextElementSibling.classList.remove('input-icon-invalid');
     });
-    authInput.addEventListener('blur', e => inputValidation(validationTypes[index], e.currentTarget, e.currentTarget.value));
+    authInput.addEventListener('blur', (e) =>
+      inputValidation(validationTypes[index], e.currentTarget, e.currentTarget.value)
+    );
   });
 
-  authForm.addEventListener('submit', async(e) => {
+  authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const userEmail =  formData.get('user-email');
+    const userEmail = formData.get('user-email');
     const userPassword = formData.get('user-password');
     const userName = formData.get('user-name');
     if (authButton.textContent === '登入帳戶') {
       userEmail === '' || userPassword === ''
-        ? (
-          [emailInput, passwordInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value)),
-          showAuthMsg('登入失敗，欄位皆不得為空')
-        ) : await patchUser({ userEmail, userPassword }, [emailInput, passwordInput]);
+        ? ([emailInput, passwordInput].forEach((authInput, index) =>
+            inputValidation(validationTypes[index], authInput, authInput.value)
+          ),
+          showAuthMsg('登入失敗，欄位皆不得為空'))
+        : await patchUser({ userEmail, userPassword }, [emailInput, passwordInput]);
     } else if (authButton.textContent === '註冊帳戶') {
       userEmail === '' || userPassword === '' || userName === ''
-        ? (
-          [emailInput, passwordInput, nameInput].forEach((authInput, index) => inputValidation(validationTypes[index], authInput, authInput.value)),
-          showAuthMsg('註冊失敗，欄位皆不得為空')
-        ) : await postUser({ userEmail, userPassword, userName }, [emailInput, passwordInput, nameInput]);
+        ? ([emailInput, passwordInput, nameInput].forEach((authInput, index) =>
+            inputValidation(validationTypes[index], authInput, authInput.value)
+          ),
+          showAuthMsg('註冊失敗，欄位皆不得為空'))
+        : await postUser({ userEmail, userPassword, userName }, [emailInput, passwordInput, nameInput]);
     }
   });
 });
