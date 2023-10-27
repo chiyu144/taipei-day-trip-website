@@ -1,6 +1,6 @@
 #### Taipei Day Trip Website
-- WeHelp Bootcamp 2022 assigned project.
-- A travel e-commerce demo website.
+- WeHelp Bootcamp 2022 assigned project
+- A travel e-commerce demo website
 - This repository is no longer maintained. The live demo is available only as a screenshot 🖼
 
 #### Features
